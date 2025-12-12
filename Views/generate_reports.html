@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Generate Reports - Orphanage Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('../img/business-accessories-objects-top-view.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .report-section {
+            background-color: #fff;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .report-table th,
+        .report-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .report-table th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .report-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .report-table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>Generate Reports</h2>
+
+        <div class="report-section">
+            <h3>Child Welfare Report</h3>
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Child ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Gender</th>
+                        <th>Admission Date</th>
+                    </tr>
+                </thead>
+                <tbody id="child-welfare-report-body">
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="report-section">
+            <h3>Educational Performance Report</h3>
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Record ID</th>
+                        <th>Child</th>
+                        <th>School Name</th>
+                        <th>Grade</th>
+                        <th>Performance</th>
+                        <th>Extracurricular Activities</th>
+                        <th>Attendance</th>
+                        <th>Class</th>
+                    </tr>
+                </thead>
+                <tbody id="educational-performance-report-body">
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="report-section">
+            <h3>Health Records Report</h3>
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Record ID</th>
+                        <th>Child</th>
+                        <th>Medical History</th>
+                        <th>Vaccinations</th>
+                        <th>Treatments</th>
+                        <th>Last Checkup</th>
+                        <th>Next Appointment</th>
+                    </tr>
+                </thead>
+                <tbody id="health-records-report-body">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="footer">
+        © 2024 Orphanage Management System --- Fahim Mahmud Bhuiyan
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        async function fetchChildWelfareReport() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/reports/child-welfare`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const children = await response.json();
+                const tableBody = document.getElementById('child-welfare-report-body');
+                tableBody.innerHTML = '';
+
+                children.forEach(child => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${child._id}</td>
+                        <td>${child.first_name}</td>
+                        <td>${child.last_name}</td>
+                        <td>${new Date(child.date_of_birth).toLocaleDateString()}</td>
+                        <td>${child.gender}</td>
+                        <td>${new Date(child.admission_date).toLocaleDateString()}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching child welfare report:', error);
+                alert('Failed to fetch child welfare report.');
+            }
+        }
+
+        async function fetchEducationalPerformanceReport() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/reports/educational-performance`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const records = await response.json();
+                const tableBody = document.getElementById('educational-performance-report-body');
+                tableBody.innerHTML = '';
+
+                records.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record._id}</td>
+                        <td>${record.child_id.first_name} ${record.child_id.last_name}</td>
+                        <td>${record.school_name}</td>
+                        <td>${record.grade}</td>
+                        <td>${record.performance}</td>
+                        <td>${record.extracurricular_activities}</td>
+                        <td>${record.attendance}</td>
+                        <td>${record.class}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching educational performance report:', error);
+                alert('Failed to fetch educational performance report.');
+            }
+        }
+
+        async function fetchHealthRecordsReport() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/reports/health-records`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const records = await response.json();
+                const tableBody = document.getElementById('health-records-report-body');
+                tableBody.innerHTML = '';
+
+                records.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record._id}</td>
+                        <td>${record.child_id.first_name} ${record.child_id.last_name}</td>
+                        <td>${record.medical_history}</td>
+                        <td>${record.vaccinations}</td>
+                        <td>${record.treatments}</td>
+                        <td>${record.last_checkup ? new Date(record.last_checkup).toLocaleDateString() : ''}</td>
+                        <td>${record.next_appointment ? new Date(record.next_appointment).toLocaleDateString() : ''}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching health records report:', error);
+                alert('Failed to fetch health records report.');
+            }
+        }
+
+        window.onload = () => {
+            fetchChildWelfareReport();
+            fetchEducationalPerformanceReport();
+            fetchHealthRecordsReport();
+        };
+    </script>
+</body>
+</html>

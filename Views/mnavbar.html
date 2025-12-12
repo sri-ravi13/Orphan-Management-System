@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 14px 20px;
+            display: block;
+            text-align: center;
+        }
+
+        .navbar a:hover {
+            background-color: #575757;
+            border-radius: 5px;
+        }
+
+        .navbar .navbar-brand a {
+            font-size: 17.5px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .navbar .navbar-brand a:hover {
+            background-color: inherit;
+        }
+
+        .navbar .navbar-links {
+            display: flex;
+        }
+
+        .navbar .navbar-links a {
+            margin-left: 10px;
+            font-size: 13.5px;
+        }
+
+        .content {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-brand">
+            <a href="home.html">Orphanage Management System</a>
+        </div>
+        <div class="navbar-links" id="navbar-links">
+            <a href="home.html">Home</a>
+            <a href="Views/login.html" id="login-link">Login</a>
+            <a href="#" id="logout-link" style="display: none;">Logout</a>
+            <a href="Views/admin_dashboard.html" class="nav-link" style="display: none;">Dashboard</a>
+            <a href="Views/manage_users.html" class="nav-link" style="display: none;">Manage Users</a>
+            <a href="Views/child_records.html" class="nav-link" style="display: none;">Child Records</a>
+            <a href="Views/health_records.html" class="nav-link" style="display: none;">Health Records</a>
+            <a href="Views/educational_management.html" class="nav-link" style="display: none;">Educational Management</a>
+            <a href="Views/generate_reports.html" class="nav-link" style="display: none;">Generate Reports</a>
+            <a href="Views/messages.html" class="nav-link" style="display: none;">Messages</a>
+            <a href="Views/staff_child_management.html" class="nav-link" style="display: none;">Staff Child Management</a>
+            <a href="Views/manage_adoptions.html" class="nav-link" style="display: none;">Manage Adoptions</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1>Welcome to the Orphanage Management System</h1>
+        <button onclick="simulateLogin()">Simulate Login</button>
+        <button onclick="simulateLogout()">Simulate Logout</button>
+    </div>
+
+    <script>
+        function simulateLogin() {
+
+            document.getElementById('login-link').style.display = 'none';
+            document.getElementById('logout-link').style.display = 'block';
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.style.display = 'block';
+            });
+        }
+
+        function simulateLogout() {
+
+            document.getElementById('login-link').style.display = 'block';
+            document.getElementById('logout-link').style.display = 'none';
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>

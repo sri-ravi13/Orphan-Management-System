@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    <title>Donate - Orphanage Management System</title>
+    <style>
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.7;
+            color: #444;
+            background-color: #f8f9fa;
+        }
+
+
+        .navbar {
+            width: 100%;
+            background-color: #343a40;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 40px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: #f8f9fa;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            vertical-align: middle;
+        }
+
+        .navbar a:hover, .navbar a.active {
+            background-color: #495057;
+            color: #fff;
+        }
+
+        .navbar .navbar-brand img {
+             height: 35px;
+             vertical-align: middle;
+             filter: brightness(0) invert(1);
+         }
+
+        .navbar .navbar-brand a {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #fff;
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+         .navbar .navbar-brand span {
+             margin-left: 12px;
+         }
+
+        .navbar .navbar-brand a:hover {
+            background-color: inherit;
+            color: #fff;
+        }
+
+        .navbar .navbar-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .navbar-links a {
+            margin-left: 5px;
+        }
+
+        .navbar .user-greeting {
+            color: #e9ecef;
+            margin-left: 15px;
+            margin-right: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        #logout-link, #login-link {
+             vertical-align: middle;
+        }
+
+
+        .main-content {
+            margin-top: 80px;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section {
+             padding: 50px 0;
+        }
+
+
+        h1.page-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: #343a40;
+            font-weight: 600;
+        }
+         h1.page-title::after {
+             content: '';
+             display: block;
+             width: 70px;
+             height: 3px;
+             background: #007bff;
+             margin: 10px auto 0 auto;
+         }
+
+
+        .donation-form-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+        }
+
+        .form-section h3 {
+            font-size: 1.3rem;
+            color: #495057;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+
+        .amount-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .amount-btn {
+            background-color: #f1f3f5;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .amount-btn:hover {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        .amount-btn.selected {
+            background-color: #007bff;
+            border-color: #0056b3;
+            color: #fff;
+        }
+
+        .custom-amount-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .custom-amount-input label {
+            font-weight: 500;
+            color: #495057;
+            white-space: nowrap;
+            margin-bottom: 0;
+         }
+        .custom-amount-input span {
+             font-weight: 500;
+             color: #495057;
+             font-size: 1rem;
+        }
+        .custom-amount-input input[type="number"] {
+            width: 120px;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .custom-amount-input input[type=number]::-webkit-inner-spin-button,
+        .custom-amount-input input[type=number]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .custom-amount-input input[type=number] {
+          -moz-appearance: textfield;
+        }
+
+        .frequency-options label {
+            margin-right: 20px;
+            font-weight: 500;
+            color: #495057;
+            cursor: pointer;
+        }
+        .frequency-options input[type="radio"] {
+            margin-right: 8px;
+             accent-color: #007bff;
+             cursor: pointer;
+             vertical-align: middle;
+        }
+
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+        .form-group input:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+
+        .card-details-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .card-expiry-group {
+            flex: 1;
+            min-width: 120px;
+        }
+        .card-cvc-group {
+            flex: 1;
+            min-width: 100px;
+        }
+
+
+        .submit-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .submit-btn:disabled {
+             background-color: #6c757d;
+             cursor: not-allowed;
+             transform: none;
+        }
+        .submit-btn:hover:not(:disabled) {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+
+        #donation-status {
+             margin-top: 15px;
+             padding: 10px;
+             border-radius: 5px;
+             font-weight: 500;
+             display: none;
+             text-align: center;
+        }
+        #donation-status.success { background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        #donation-status.error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        #donation-status.loading { background-color: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
+        #donation-status i { margin-right: 8px; }
+
+
+
+        .security-note {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .security-note svg {
+            vertical-align: middle;
+            margin-right: 5px;
+            width: 14px;
+            height: 14px;
+        }
+
+
+        .footer {
+            background-color: #343a40;
+            color: #adb5bd;
+            padding: 50px 0 20px 0;
+            margin-top: 60px;
+        }
+        .footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 0 20px; gap: 30px; }
+        .footer-column { flex: 1; min-width: 220px; margin-bottom: 30px; }
+        .footer-column h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; font-weight: 600; border-bottom: 2px solid #495057; padding-bottom: 10px; }
+        .footer-column p, .footer-column ul, .footer-column li { font-size: 0.95rem; color: #adb5bd; line-height: 1.8; }
+        .footer-column ul { list-style: none; padding: 0; } .footer-column ul li { margin-bottom: 10px; } .footer-column ul li a { color: #adb5bd; text-decoration: none; transition: color 0.3s ease; } .footer-column ul li a:hover { color: #fff; text-decoration: none; }
+        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #495057; font-size: 0.9rem; color: #6c757d; }
+
+    </style>
+</head>
+<body>
+
+    
+    <div class="navbar">
+        <div class="navbar-brand">
+             
+             <a href="../public.html">
+                <img src="../logo.png" alt="Orphanage Logo">
+                 <span>Orphanage Management System</span>
+            </a>
+        </div>
+        <div class="navbar-links">
+            
+            <a href="../public.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../children.html">Our Children</a>
+            <a href="../contact.html">Contact</a>
+            <a href="donation.html" class="active">Donate</a> 
+            
+            <span class="user-greeting" id="user-greeting" style="display: none;">Welcome, Guest!</span>
+            <a href="#" onclick="logout(event)" id="logout-link" style="display: none;">Logout</a>
+            <a href="login.html" id="login-link" style="display: inline-block;">Login</a>
+        </div>
+    </div>
+
+    
+    <div class="main-content">
+        <div class="container">
+
+            <h1 class="page-title">Make a Donation</h1>
+
+            <div class="donation-form-container">
+                
+                <form id="donation-form">
+
+                    
+                    <input type="hidden" name="donation_amount" id="donation_amount_hidden" value="500"> 
+
+                    
+                    <div class="form-section">
+                        <h3>Choose an Amount (INR)</h3>
+                        <div class="amount-options">
+                            <button type="button" class="amount-btn selected" data-amount="500">₹500</button>
+                            <button type="button" class="amount-btn" data-amount="1000">₹1000</button>
+                            <button type="button" class="amount-btn" data-amount="2500">₹2500</button>
+                            <button type="button" class="amount-btn" data-amount="5000">₹5000</button>
+                        </div>
+                        <div class="custom-amount-input">
+                             <label for="custom_amount">Or enter custom amount:</label>
+                             <span>₹</span>
+                             <input type="number" id="custom_amount" name="custom_amount_entry" min="50" placeholder="Custom">
+                        </div>
+                    </div>
+
+                    
+                    <div class="form-section">
+                        <h3>Donation Frequency</h3>
+                        <div class="frequency-options">
+                            <label>
+                                <input type="radio" name="donation_frequency" value="one-time" checked> One-Time
+                            </label>
+                            <label>
+                                <input type="radio" name="donation_frequency" value="monthly"> Monthly
+                            </label>
+                        </div>
+                    </div>
+
+                    
+                    <div class="form-section">
+                        <h3>Payment Details</h3>
+                        <p style="font-size:0.9rem; color:#6c757d; margin-bottom:15px;">
+                            Please enter your payment information below.
+                            <br><strong>Note:</strong> For security, these details are not stored on our server.
+                        </p>
+
+                        <div class="form-group">
+                            <label for="cardholder_name">Name on Card</label>
+                            <input type="text" id="cardholder_name" name="cardholder_name" required placeholder="Full Name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card_number">Card Number</label>
+                            <input type="tel" id="card_number" required placeholder="•••• •••• •••• ••••" pattern="[\d ]{16,19}" title="Enter a valid card number (16-19 digits)">
+                         </div>
+
+                        <div class="card-details-group">
+                            <div class="form-group card-expiry-group">
+                                <label for="expiry_date">Expiry Date</label>
+                                <input type="text" id="expiry_date" required placeholder="MM / YY" pattern="\d{2}\s*/\s*\d{2}" title="Enter expiry date as MM / YY">
+                            </div>
+                            <div class="form-group card-cvc-group">
+                                <label for="cvc">CVC / CVV</label>
+                                <input type="tel" id="cvc" required placeholder="123" pattern="\d{3,4}" title="Enter the 3 or 4 digit code from the back of your card">
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <!-- <div class="form-section">
+                        <h3>Your Information (Optional)</h3>
+                         <div class="form-group">
+                            <label for="donor_email">Email Address (for receipt)</label>
+                            <input type="email" id="donor_email" name="donor_email" placeholder="your.email@example.com">
+                        </div>
+                    </div> -->
+
+                    
+                    <div id="donation-status"></div>
+
+                    
+                    <button type="submit" class="submit-btn">Donate Now</button>
+
+                    <p class="security-note">
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.99998C9.23897 1.99998 7 4.23807 7 6.99998V8.99998H6C4.89543 8.99998 4 9.89541 4 11V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V11C20 9.89541 19.1046 8.99998 18 8.99998H17V6.99998C17 4.23807 14.761 1.99998 12 1.99998ZM12 3.99998C13.6568 3.99998 15 5.34313 15 6.99998V8.99998H9V6.99998C9 5.34313 10.3431 3.99998 12 3.99998ZM6 11H18V20H6V11Z"></path></svg>
+                         Secure Donation Processing (Simulation)
+                    </p>
+
+                </form>
+            </div>
+
+        </div> 
+    </div> 
+
+    
+    <footer class="footer">
+        <div class="footer-container container">
+            <div class="footer-column">
+                <h4>Orphanage Management System</h4>
+                <p>
+                    Dedicated to streamlining operations and enhancing the care provided to every child, ensuring a brighter future through efficient management and compassionate support.
+                </p>
+            </div>
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="../public.html">Home</a></li>
+                    <li><a href="../children.html">Our Children</a></li>
+                    <li><a href="../about.html">About Us</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                    <li><a href="donation.html">Donate</a></li>
+                    <li><a href="login.html">Staff Login</a></li> 
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Info</h4>
+                 <p>Phone: +789 456 1236</p>
+                 <p>Email: info@omsystem.org</p>
+                 <p>Address: 123 Charity Lane,<br> Hope City, Welfare State<br> IN-110001</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 Orphanage Management System | All Rights Reserved
+        </div>
+    </footer>
+
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        const LOGGED_IN_USER_KEY = 'loggedInUser';
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const userGreetingElement = document.getElementById('user-greeting');
+            const logoutLink = document.getElementById('logout-link');
+            const loginLink = document.getElementById('login-link');
+            const storedUserString = localStorage.getItem(LOGGED_IN_USER_KEY);
+            let loggedInUser = null;
+
+            if (storedUserString) {
+                try {
+                    loggedInUser = JSON.parse(storedUserString);
+                } catch (e) {
+                    console.error("Error parsing stored user data:", e);
+                    localStorage.removeItem(LOGGED_IN_USER_KEY);
+                }
+            }
+
+            if (loggedInUser && loggedInUser.username) {
+                userGreetingElement.textContent = `Welcome, ${loggedInUser.username}!`;
+                userGreetingElement.style.display = 'inline-block';
+                logoutLink.style.display = 'inline-block';
+                loginLink.style.display = 'none';
+            } else {
+                userGreetingElement.style.display = 'none';
+                logoutLink.style.display = 'none';
+                loginLink.style.display = 'inline-block';
+            }
+
+
+            const amountBtns = document.querySelectorAll('.amount-btn');
+            const customAmountInput = document.getElementById('custom_amount');
+            const hiddenAmountInput = document.getElementById('donation_amount_hidden');
+            const form = document.getElementById('donation-form');
+            const submitButton = form.querySelector('.submit-btn');
+            const statusDiv = document.getElementById('donation-status');
+
+
+            const initialSelected = document.querySelector('.amount-btn.selected');
+            if (initialSelected) {
+                hiddenAmountInput.value = initialSelected.getAttribute('data-amount');
+            } else {
+                 hiddenAmountInput.value = '500';
+                 document.querySelector('.amount-btn[data-amount="500"]')?.classList.add('selected');
+            }
+
+
+            amountBtns.forEach(button => {
+                button.addEventListener('click', function() {
+                    amountBtns.forEach(btn => btn.classList.remove('selected'));
+                    this.classList.add('selected');
+                    hiddenAmountInput.value = this.getAttribute('data-amount');
+                    customAmountInput.value = '';
+                 });
+            });
+
+
+            customAmountInput.addEventListener('input', function() {
+                const customValue = parseFloat(this.value);
+                if (this.value && customValue > 0) {
+                    amountBtns.forEach(btn => btn.classList.remove('selected'));
+                    hiddenAmountInput.value = customValue;
+                } else if (!this.value) {
+                     const firstButton = amountBtns[0];
+                     if (firstButton && !document.querySelector('.amount-btn.selected')) {
+                         firstButton.classList.add('selected');
+                         hiddenAmountInput.value = firstButton.getAttribute('data-amount');
+                     } else if (!document.querySelector('.amount-btn.selected')) {
+                         hiddenAmountInput.value = '';
+                     }
+                }
+            });
+
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                displayDonationStatus('Processing donation...', 'loading', false);
+                submitButton.disabled = true;
+
+
+                const formData = {
+                    donation_amount: document.getElementById('donation_amount_hidden').value,
+                    donation_frequency: form.elements.donation_frequency.value,
+                    cardholder_name: form.elements.cardholder_name.value.trim(),
+
+
+                };
+
+
+                if (!formData.donation_amount || parseFloat(formData.donation_amount) <= 0) {
+                    displayDonationStatus('Please select or enter a valid donation amount.', 'error', false);
+                    submitButton.disabled = false;
+                    return;
+                }
+                if (!formData.cardholder_name) {
+                    displayDonationStatus('Please enter the name on the card.', 'error', false);
+                     submitButton.disabled = false;
+                     return;
+                 }
+
+
+                 if (!form.elements.card_number.checkValidity() ||
+                     !form.elements.expiry_date.checkValidity() ||
+                     !form.elements.cvc.checkValidity()) {
+                       displayDonationStatus('Please check your card details.', 'error', false);
+                       submitButton.disabled = false;
+                       return;
+                 }
+
+
+                try {
+
+                    const response = await fetch(`${API_BASE_URL}/api/donations`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+
+
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        displayDonationStatus('Thank you! Your donation has been recorded successfully.', 'success', false);
+                        form.reset();
+
+                         amountBtns.forEach(btn => btn.classList.remove('selected'));
+                         const defaultButton = document.querySelector('.amount-btn[data-amount="500"]');
+                         if(defaultButton) defaultButton.classList.add('selected');
+                         hiddenAmountInput.value = '500';
+                    } else {
+                        throw new Error(result.message || `HTTP error! Status: ${response.status}`);
+                    }
+
+                } catch (error) {
+                    console.error('Donation submission error:', error);
+                    displayDonationStatus(`Error: ${error.message}`, 'error', false);
+                } finally {
+                    submitButton.disabled = false;
+                }
+            });
+
+
+            function displayDonationStatus(message, type = 'info', autoHide = true) {
+                 if (!statusDiv) return;
+
+                 let statusInlineStyle = '';
+                 let iconClass = 'fas fa-info-circle';
+
+                 switch (type) {
+                     case 'success':
+                         statusInlineStyle = 'background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7;';
+                         iconClass = 'fas fa-check-circle';
+                         break;
+                     case 'error':
+                         statusInlineStyle = 'background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;';
+                         iconClass = 'fas fa-exclamation-triangle';
+                         break;
+                     case 'loading':
+                         statusInlineStyle = 'background-color: #e0f2fe; color: #075985; border: 1px solid #7dd3fc;';
+                         iconClass = 'fas fa-spinner fa-spin';
+                         break;
+                     default: 
+                         statusInlineStyle = 'background-color: #e0f2fe; color: #075985; border: 1px solid #7dd3fc;';
+                         break;
+                 }
+
+                 statusDiv.style.cssText = statusInlineStyle + ' padding: 10px; border-radius: 5px; font-weight: 500; text-align: center;';
+                 statusDiv.innerHTML = `<i class="${iconClass}" style="margin-right: 8px;"></i> ${message}`;
+                 statusDiv.style.display = 'block';
+
+                 if (autoHide && (type === 'success' || type === 'info')) {
+                     setTimeout(() => {
+                         if (statusDiv.style.display === 'block' && statusDiv.innerHTML.includes(message)) {
+                             statusDiv.style.display = 'none';
+                             statusDiv.innerHTML = '';
+                             statusDiv.removeAttribute('style');
+                         }
+                     }, 5000);
+                 }
+            }
+        });
+
+
+        function logout(event) {
+            if (event) event.preventDefault();
+            localStorage.removeItem(LOGGED_IN_USER_KEY);
+            sessionStorage.clear();
+            alert("You have been logged out.");
+            window.location.href = "../public.html";
+        }
+    </script>
+
+</body>
+</html>

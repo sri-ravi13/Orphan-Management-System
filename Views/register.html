@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Register - Orphanage Management System</title>
+    <style>
+
+        body {
+            font-family: 'Poppins', sans-serif;
+
+            background: url('../img/2304_q894_004.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+             padding-top: 30px;
+             padding-bottom: 30px;
+        }
+
+        .registration-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px 40px;
+            border-radius: 15px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .registration-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(30, 58, 138, 0.1) 0%, transparent 70%);
+            z-index: 0;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .registration-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .registration-container h2 {
+            margin-bottom: 20px;
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 1.8em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .registration-container .error {
+            color: #dc3545;
+            margin-bottom: 15px;
+            min-height: 1.2em;
+            font-size: 0.9em;
+        }
+
+
+        .registration-container input[type="text"],
+        .registration-container input[type="email"],
+        .registration-container input[type="tel"],
+        .registration-container input[type="password"],
+        .registration-container select {
+            width: 100%;
+            padding: 10px 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 0.95em;
+            transition: border-color 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+         .registration-container input::placeholder {
+            color: #999;
+         }
+
+         .registration-container select {
+             color: #555;
+         }
+         .registration-container select:required:invalid {
+              color: #999;
+         }
+         .registration-container option[value=""][disabled] {
+             display: none;
+         }
+         .registration-container option {
+              color: #333;
+         }
+
+
+        .registration-container input[type="text"]:focus,
+        .registration-container input[type="email"]:focus,
+        .registration-container input[type="tel"]:focus,
+        .registration-container input[type="password"]:focus,
+        .registration-container select:focus {
+            border-color: #1e3a8a;
+            outline: none;
+            box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
+        }
+
+
+        .password-hint {
+            font-size: 0.8em;
+            color: #666;
+            text-align: left;
+            margin: -5px 0 10px 5px;
+        }
+
+        .registration-container input[type="submit"] {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+            margin-top: 15px;
+        }
+
+        .registration-container input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(30, 58, 138, 0.4);
+        }
+
+        .registration-container .link-options {
+            margin-top: 20px;
+            font-size: 0.95em;
+            color: #475569;
+        }
+
+        .registration-container .link-options a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .registration-container .link-options a:hover {
+            color: #1e40af;
+            text-decoration: underline;
+        }
+
+        .login-logo {
+            margin-bottom: 15px;
+        }
+        .login-logo img {
+            width: 80px;
+            height: auto;
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <div class="login-logo">
+            
+            <img src="../img/logo.png" alt="Orphanage Management Logo">
+        </div>
+        <h2>Register</h2>
+        <div id="error-message" class="error"></div>
+        <form id="registration-form">
+            <input type="text" id="name" name="name" placeholder="Name" required>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="email" id="email" name="email" placeholder="Email Id" required>
+            <input type="tel" id="phone" name="phone" placeholder="Phone Number" required> 
+             <select id="gender" name="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <p class="password-hint">Password must use numbers and one uppercase and lowercase letters, and at least 6 or more characters</p>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+
+            <input type="submit" value="Register">
+        </form>
+        <div class="link-options">
+           Already Registered? <a href="login.html">Signin</a>
+        </div>
+        <div class="footer-note">
+            © 2024 Orphanage Management System | All Rights Reserved
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        document.getElementById('registration-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const gender = document.getElementById('gender').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            errorMessage.textContent = '';
+
+
+            if (!name || !username || !email || !phone || !gender || !password || !confirmPassword) {
+                errorMessage.textContent = 'Please fill in all required fields.';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match.';
+                return;
+            }
+
+
+
+            const registrationData = {
+                name: name,
+                username: username,
+                email: email,
+                phone_number: phone,
+                gender: gender,
+                password: password
+
+            };
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/api/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(registrationData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Registration successful! Please proceed to login.');
+
+                    window.location.href = 'login.html';
+                } else {
+
+                    errorMessage.textContent = data.message || 'Registration failed. Please try again.';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'An error occurred connecting to the server.';
+                console.error('Registration error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

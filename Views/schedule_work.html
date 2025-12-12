@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="../css/styles.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <title>Schedule Work - Admin Dashboard</title>
+    <style>
+
+        :root {
+            --primary-color: #1e3a8a; --primary-dark: #172554; --accent-color: #f59e0b;
+            --light-gray: #f1f5f9; --medium-gray: #e2e8f0; --dark-gray: #475569;
+            --text-color: #1e293b; --card-bg: #ffffff; --success-color: #22c55e;
+            --danger-color: #ef4444; --warning-color: #f59e0b; --border-color: #e5e7eb;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1); --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.15);
+            --gradient-bg: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif; background-color: var(--light-gray); color: var(--text-color);
+            line-height: 1.6; padding-top: 80px; font-size: 16px;
+             background: url('../img/2304.q894.007.jpg') no-repeat center center fixed;
+             background-size: cover;
+        }
+
+        .admin-navbar {
+            width: 100%; background: var(--gradient-bg); color: #fff; position: fixed;
+            top: 0; left: 0; z-index: 1000; display: flex; justify-content: space-between;
+            align-items: center; padding: 15px 60px; box-shadow: var(--shadow-md);
+        }
+        .admin-navbar .brand { font-size: 1.8em; font-weight: 700; display: flex; align-items: center; }
+        .admin-navbar .brand i { color: var(--accent-color); margin-right: 12px; font-size: 1.4em; }
+        .admin-navbar .logout-link {
+            color: #fff; background-color: var(--danger-color); padding: 10px 25px;
+            border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease; display: inline-flex;
+            align-items: center; box-shadow: var(--shadow-sm);
+        }
+        .admin-navbar .logout-link:hover { background-color: #dc2626; transform: translateY(-2px); }
+        .admin-navbar .logout-link i { margin-right: 10px; }
+         .admin-navbar .back-link {
+            color: #fff; background-color: var(--dark-gray); padding: 10px 25px;
+            border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease; display: inline-flex;
+            align-items: center; box-shadow: var(--shadow-sm); margin-right: 20px;
+        }
+        .admin-navbar .back-link:hover { background-color: #555; transform: translateY(-2px); }
+        .admin-navbar .back-link i { margin-right: 10px; }
+
+        .content-container {
+            max-width: 1100px; margin: 40px auto; padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px; box-shadow: var(--shadow-md);
+        }
+        h2 { color: var(--primary-dark); margin-bottom: 25px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; font-weight: 600; }
+        h3 { color: var(--primary-dark); margin-top: 30px; margin-bottom: 15px; font-weight: 500;}
+
+
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--dark-gray); }
+        select, textarea, input[type="date"], input[type="text"] {
+            width: 100%; padding: 12px 15px; margin-bottom: 20px;
+            border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Poppins', sans-serif;
+            font-size: 1em; background-color: #fff; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        select:focus, textarea:focus, input:focus {
+            outline: none; border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.2);
+        }
+        textarea { min-height: 100px; resize: vertical; }
+        button {
+            display: inline-flex; align-items: center; justify-content: center; padding: 12px 25px;
+            border: none; border-radius: 6px; cursor: pointer; font-family: 'Poppins', sans-serif;
+            font-weight: 600; font-size: 1em; text-decoration: none; text-align: center;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        button:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        button:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
+        .btn-assign { background-color: var(--success-color); color: white; }
+        .btn-assign:hover { background-color: #16a34a; }
+        .btn-assign i { margin-right: 8px; }
+
+
+        #schedule-status { margin-top: 15px; padding: 10px; border-radius: 5px; font-weight: 500; display: none; }
+        #schedule-status.success { background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        #schedule-status.error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        #schedule-status.loading { background-color: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
+        #schedule-status i { margin-right: 8px; }
+
+
+        .task-list-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .task-list-table th, .task-list-table td {
+            border: 1px solid var(--medium-gray); padding: 12px 15px; text-align: left;
+            font-size: 0.95em; vertical-align: middle;
+        }
+        .task-list-table th { background-color: var(--light-gray); color: var(--primary-dark); font-weight: 600; }
+        .task-list-table tr:nth-child(even) { background-color: #f8f9fa; }
+        .task-list-table tr:hover { background-color: var(--medium-gray); }
+        .status-pending { color: var(--warning-color); font-weight: bold; }
+        .status-completed { color: var(--success-color); font-weight: bold; }
+        .task-list-table td.actions { text-align: center; }
+        .task-list-table .btn-delete { background-color: var(--danger-color); color: white; padding: 6px 12px; font-size: 0.9em; }
+        .task-list-table .btn-delete:hover { background-color: #dc2626; }
+        .task-list-table .btn-delete i { margin-right: 5px; }
+        .no-tasks { text-align: center; padding: 20px; color: var(--dark-gray); font-style: italic; }
+
+    </style>
+</head>
+<body>
+
+    
+    <div class="admin-navbar">
+        <div class="brand"><i class="fas fa-calendar-check"></i> Schedule Work</div>
+        <div> 
+            <a href="admin_dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a> 
+            <a href="#" class="logout-link" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    
+    <div class="content-container">
+        <h2>Assign New Task</h2>
+
+        <form id="schedule-form">
+            <div>
+                <label for="staff-select">Select Staff Member:</label>
+                <select id="staff-select" name="staffId" required>
+                    <option value="">-- Loading Staff --</option>
+                    
+                </select>
+            </div>
+
+            <div>
+                <label for="task-description">Task Description:</label>
+                <textarea id="task-description" name="taskDescription" rows="4" required placeholder="Enter details of the task..."></textarea>
+            </div>
+
+            <div>
+                <label for="task-due-date">Due Date (Optional):</label>
+                <input type="date" id="task-due-date" name="dueDate">
+            </div>
+
+            <button type="submit" class="btn-assign"><i class="fas fa-plus-circle"></i> Assign Task</button>
+        </form>
+
+        <div id="schedule-status"></div> 
+
+        <hr style="margin: 40px 0; border-top: 1px solid var(--medium-gray);">
+
+        <h3><i class="fas fa-list-check"></i> Assigned Tasks Overview</h3>
+        <div id="task-list-container">
+            <table class="task-list-table">
+                <thead>
+                    <tr>
+                        <th>Staff Member</th>
+                        <th>Task</th>
+                        <th>Assigned On</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Completed On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="task-list-body">
+                    
+                    <tr><td colspan="7" class="no-tasks">Loading tasks...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchStaffMembers();
+            fetchAssignedTasks();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('schedule-form').addEventListener('submit', handleAssignTask);
+
+            document.getElementById('task-list-body').addEventListener('click', handleDeleteTaskClick);
+        }
+
+
+        async function fetchStaffMembers() {
+    const selectElement = document.getElementById('staff-select');
+    try {
+
+        const response = await fetch(`${API_BASE_URL}/api/staff-assignments/staff`);
+
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const staffMembers = await response.json();
+
+        selectElement.innerHTML = '<option value="">-- Select Staff --</option>';
+        if (staffMembers.length > 0) {
+            staffMembers.forEach(staff => {
+                const option = document.createElement('option');
+                option.value = staff._id;
+
+
+                 option.textContent = `${staff.username}`;
+
+
+                 selectElement.appendChild(option);
+            });
+        } else {
+            selectElement.innerHTML = '<option value="">-- No Staff Found --</option>';
+        }
+    } catch (error) {
+        console.error('Error fetching staff members:', error);
+        selectElement.innerHTML = '<option value="">-- Error Loading Staff --</option>';
+        displayStatus('Error loading staff list.', 'error');
+    }
+}
+
+        async function fetchAssignedTasks() {
+            const tableBody = document.getElementById('task-list-body');
+            tableBody.innerHTML = '<tr><td colspan="7" class="no-tasks"><i class="fas fa-spinner fa-spin"></i> Loading tasks...</td></tr>';
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/api/schedule`);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const tasks = await response.json();
+
+                renderTaskList(tasks);
+
+            } catch (error) {
+                console.error('Error fetching assigned tasks:', error);
+                tableBody.innerHTML = '<tr><td colspan="7" class="no-tasks text-danger">Could not load tasks.</td></tr>';
+            }
+        }
+
+
+        function renderTaskList(tasks) {
+            const tableBody = document.getElementById('task-list-body');
+            tableBody.innerHTML = '';
+
+            if (!tasks || tasks.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" class="no-tasks">No tasks assigned yet.</td></tr>';
+                return;
+            }
+
+            tasks.sort((a, b) => new Date(b.dateAssigned || 0) - new Date(a.dateAssigned || 0));
+
+            tasks.forEach(task => {
+                const row = tableBody.insertRow();
+                let staffDisplayName = 'N/A';
+                if (task.staffId && typeof task.staffId === 'object') {
+
+                    staffDisplayName = task.staffId.name || task.staffId.username;
+                } else if (task.staffId) {
+
+                    staffDisplayName = `Staff ID: ${task.staffId}`;
+                }
+
+                row.innerHTML = `
+                    <td>${staffDisplayName}</td>
+                    <td>${task.taskDescription || 'No Description'}</td>
+                    <td>${task.dateAssigned ? new Date(task.dateAssigned).toLocaleDateString() : 'N/A'}</td>
+                    <td>${task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'None'}</td>
+                    <td><span class="status-${task.status || 'pending'}">${task.status || 'pending'}</span></td>
+                    <td>${task.dateCompleted ? new Date(task.dateCompleted).toLocaleDateString() : '-'}</td>
+                    <td class="actions">
+                        ${task.status !== 'completed' ?
+                          `<button class="btn-delete" data-task-id="${task._id}" title="Delete Task"><i class="fas fa-trash-alt"></i></button>`
+                          : '<span title="Cannot delete completed task">-</span>'}
+                     </td>
+                `;
+
+            });
+        }
+
+
+        async function handleAssignTask(event) {
+            event.preventDefault();
+            const form = event.target;
+            const statusDiv = document.getElementById('schedule-status');
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            const staffId = form.elements.staffId.value;
+            const taskDescription = form.elements.taskDescription.value;
+            const dueDate = form.elements.dueDate.value || null;
+
+            if (!staffId || !taskDescription) {
+                displayStatus('Please select a staff member and enter a task description.', 'error');
+                return;
+            }
+
+            const taskData = {
+                staffId: staffId,
+                taskDescription: taskDescription,
+                dueDate: dueDate,
+
+            };
+
+            displayStatus('Assigning task...', 'loading', false);
+            submitButton.disabled = true;
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/api/schedule`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(taskData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: `Failed to assign task (${response.status})` }));
+                    throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+                }
+
+
+
+                displayStatus('Task assigned successfully!', 'success');
+                form.reset();
+                fetchAssignedTasks();
+
+            } catch (error) {
+                console.error('Error assigning task:', error);
+                displayStatus(`Error: ${error.message}`, 'error', false);
+            } finally {
+                submitButton.disabled = false;
+            }
+        }
+
+        async function handleDeleteTaskClick(event) {
+             if (event.target.closest('.btn-delete')) {
+                 const button = event.target.closest('.btn-delete');
+                 const taskId = button.getAttribute('data-task-id');
+
+                 if (!taskId) return;
+
+                 if (confirm('Are you sure you want to delete this pending task? This action cannot be undone.')) {
+                    await deleteTask(taskId, button);
+                 }
+             }
+         }
+
+         async function deleteTask(taskId, buttonElement) {
+             displayStatus('Deleting task...', 'loading', false);
+             buttonElement.disabled = true;
+             buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+             try {
+
+                 const response = await fetch(`${API_BASE_URL}/api/schedule/${taskId}`, {
+                     method: 'DELETE'
+                 });
+
+                 if (!response.ok) {
+                     const errorData = await response.json().catch(() => ({ message: `Failed to delete task (${response.status})` }));
+                     throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+                 }
+
+                 displayStatus('Task deleted successfully.', 'success');
+                 fetchAssignedTasks();
+
+             } catch (error) {
+                 console.error('Error deleting task:', error);
+                 displayStatus(`Error deleting task: ${error.message}`, 'error', false);
+
+                 buttonElement.disabled = false;
+                 buttonElement.innerHTML = '<i class="fas fa-trash-alt"></i>';
+             }
+         }
+
+
+
+        function displayStatus(message, type = 'info', autoHide = true) {
+            const statusDiv = document.getElementById('schedule-status');
+            statusDiv.className = type;
+            statusDiv.innerHTML = `<i class="${type === 'success' ? 'fas fa-check-circle' : type === 'error' ? 'fas fa-exclamation-triangle' : type === 'loading' ? 'fas fa-spinner fa-spin' : 'fas fa-info-circle'}"></i> ${message}`;
+            statusDiv.style.display = 'block';
+
+
+            if (autoHide && (type === 'success' || type === 'info')) {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                    statusDiv.textContent = '';
+                    statusDiv.className = '';
+                }, 4000);
+            }
+        }
+
+        function logout() {
+
+            alert("You have been logged out.");
+            window.location.href = "login.html";
+        }
+
+    </script>
+
+</body>
+</html>

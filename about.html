@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>About Us - Orphanage Management System</title>
+    <style>
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.7;
+            color: #444;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+
+        .navbar {
+            font-family: 'Poppins', sans-serif; width: 100%; background-color: #343a40;
+            position: fixed; top: 0; left: 0; z-index: 1000; display: flex;
+            justify-content: space-between; align-items: center; padding: 12px 40px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .navbar a {
+            color: #f8f9fa; text-decoration: none; padding: 10px 15px; display: block;
+            text-align: center; font-size: 0.95rem; font-weight: 500; border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .navbar a:hover, .navbar a.active { background-color: #495057; color: #fff; }
+        .navbar .navbar-brand img { height: 35px; vertical-align: middle; filter: brightness(0) invert(1); }
+        .navbar .navbar-brand a {
+            font-size: 1.25rem; font-weight: 600; text-decoration: none; color: #fff;
+            padding: 5px 0; display: flex; align-items: center; margin-right: 20px;
+        }
+        .navbar .navbar-brand span { margin-left: 12px; }
+        .navbar .navbar-brand a:hover { background-color: inherit; color: #fff; }
+        .navbar .navbar-links { display: flex; align-items: center; }
+        .navbar .navbar-links a { margin-left: 5px; }
+
+
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .navbar .user-greeting {
+            color: #e9ecef;
+            margin-right: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+        .navbar #login-link,
+        .navbar #register-link,
+        .navbar #logout-link {
+            font-size: 0.9rem;
+            padding: 8px 18px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-left: 8px;
+        }
+         .navbar #login-link,
+         .navbar #register-link {
+             background-color: #007bff;
+             color: #fff;
+             display: inline-block;
+         }
+         .navbar #login-link:hover,
+         .navbar #register-link:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+         }
+        .navbar #logout-link {
+            background-color: #dc3545;
+            color: #fff;
+            display: none;
+        }
+        .navbar #logout-link:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .admin-link, .staff-link, .public-link { display: none; }
+
+
+
+        .main-content {
+            flex-grow: 1;
+            margin-top: 70px;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 950px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 40px 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        .container h1 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 40px;
+            font-size: 2.6em;
+            font-weight: 600;
+            border-bottom: 3px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+        .about-section {
+            margin-bottom: 40px;
+        }
+        .about-section h2 {
+            color: #172554;
+            margin-bottom: 20px;
+            font-size: 1.9em;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .about-section h3 {
+            color: #1e3a8a;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+        .about-section p, .about-section ul {
+            font-size: 1.05em;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 18px;
+        }
+        .about-section ul {
+            list-style: disc;
+            padding-left: 30px;
+        }
+        .about-section ul li {
+            margin-bottom: 10px;
+        }
+        .about-image {
+            display: block;
+            max-width: 70%;
+            height: auto;
+            margin: 20px auto 40px auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+        }
+
+
+        .footer {
+            background-color: #343a40;
+            color: #adb5bd;
+            padding: 50px 0 20px 0;
+            margin-top: auto;
+        }
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #343a40;
+            padding: 0 20px;
+            gap: 30px;
+        }
+        .footer-column {
+            flex: 1;
+            min-width: 220px;
+            margin-bottom: 30px;
+        }
+        .footer-column h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-bottom: 2px solid #495057;
+            padding-bottom: 10px;
+        }
+        .footer-column p,
+        .footer-column ul,
+        .footer-column li {
+            font-size: 0.95rem;
+            color: #adb5bd;
+            line-height: 1.8;
+        }
+        .footer-column ul { list-style: none; padding: 0; }
+        .footer-column ul li { margin-bottom: 10px; }
+        .footer-column ul li a {
+            color: #adb5bd; text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-container container{
+            background-color: #343a40;
+        }
+        .footer-column ul li a:hover { color: #fff; text-decoration: none; }
+        .footer-bottom {
+            text-align: center; margin-top: 40px; padding-top: 20px;
+            border-top: 1px solid #495057;
+            font-size: 0.9rem; color: #6c757d;
+        }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-brand">
+         <a href="home.html"> 
+            
+            <img src="img/logo.png" alt="Orphanage Logo" style="width: 50px; height: 50px; border: 1px solid red; display: block !important; visibility: visible !important; opacity: 1 !important;">
+            <span>Orphanage Management System</span>
+        </a>
+    </div>
+    <div class="navbar-links">
+        <a href="home.html">Home</a>
+        <a href="about.html" class="active">About</a> 
+        <a href="children.html">Our Children</a> 
+        <a href="contact.html">Contact</a>
+         
+        
+        <a href="donation.html" class="public-link">Donate</a>
+        <a href="Views/admin_dashboard.html" class="admin-link">Admin Dashboard</a>
+        <a href="Views/staff_dashboard.html" class="staff-link">Staff Dashboard</a>
+    </div>
+    <div class="user-info">
+        <span class="user-greeting" id="user-greeting">Welcome!</span>
+        
+        <a href="Views/login.html" id="login-link">Login</a>
+        <a href="Views/register.html" id="register-link">Register</a>
+        <a href="#" id="logout-link" onclick="handleLogout(event)">Logout</a>
+     </div>
+</div>
+
+
+<div class="main-content">
+    <div class="container">
+        <h1>About Our Orphanage & Management System</h1>
+
+        
+        <img src="img/2304_q894_004.jpg" alt="Children smiling and playing together" class="about-image">
+
+        <section class="about-section introduction">
+            <h2>Welcome to a Place of Hope and Growth</h2>
+            <p>
+                We are dedicated to providing a safe, nurturing, and stimulating environment for children who have lost parental care. Our commitment extends beyond basic needs; we strive to foster emotional well-being, educational development, and the skills necessary for a bright and independent future. This Orphanage Management System (OMS) is the backbone of our operations, ensuring efficiency, transparency, and the highest standard of care for every child entrusted to us.
+            </p>
+        </section>
+
+        <section class="about-section mission-vision">
+            <h2>Our Mission & Vision</h2>
+            <h3>Mission</h3>
+            <p>
+                To provide a loving and stable home environment for orphaned and vulnerable children, ensuring their holistic development—physical, emotional, educational, and social—empowering them to reach their full potential and become contributing members of society.
+            </p>
+            <h3>Vision</h3>
+            <p>
+                To create a world where every child, regardless of their circumstances, experiences the love of a family, receives quality education and healthcare, and grows up with dignity, hope, and opportunity.
+            </p>
+        </section>
+
+         <section class="about-section approach">
+            <h2>Our Approach</h2>
+            <p>
+                We believe in a child-centric approach, focusing on individual needs and development paths. Our dedicated team provides:
+            </p>
+             <ul>
+                <li><strong>Comprehensive Care:</strong> Ensuring access to nutritious food, clean living conditions, healthcare, and regular medical check-ups.</li>
+                <li><strong>Quality Education:</strong> Supporting formal education, providing tutoring, and encouraging extracurricular activities to unlock potential.</li>
+                <li><strong>Emotional Support:</strong> Offering counseling and mentorship within a supportive community to help children heal and build resilience.</li>
+                <li><strong>Skill Development:</strong> Providing opportunities for vocational training and life skills education to prepare for adulthood.</li>
+                <li><strong>Reintegration & Adoption:</strong> Working ethically and diligently towards family reintegration where possible, and facilitating transparent adoption processes for children needing permanent families.</li>
+            </ul>
+        </section>
+
+
+        <section class="about-section core-values">
+            <h2>Our Core Values</h2>
+            <ul>
+                <li><strong>Compassion:</strong> Treating every child with empathy, kindness, and understanding.</li>
+                <li><strong>Integrity:</strong> Operating with transparency, honesty, and accountability in all our actions.</li>
+                <li><strong>Safety:</strong> Providing a secure and protected environment free from harm.</li>
+                <li><strong>Child Development:</strong> Focusing on the holistic growth and well-being of each child.</li>
+                <li><strong>Respect:</strong> Upholding the dignity and rights of every child and staff member.</li>
+                <li><strong>Community:</strong> Fostering a sense of belonging and mutual support within the orphanage and the wider community.</li>
+            </ul>
+        </section>
+
+        <section class="about-section technology">
+            <h2>The Role of Our Management System</h2>
+            <p>
+                This Orphanage Management System is a crucial tool that enhances our ability to provide exceptional care. It allows us to:
+            </p>
+            <ul>
+                <li>Maintain accurate and secure records for each child (health, education, background).</li>
+                <li>Streamline administrative tasks, freeing up more time for direct child interaction.</li>
+                <li>Manage resources effectively, ensuring donations and supplies are used efficiently.</li>
+                <li>Improve communication between staff, management, and relevant stakeholders.</li>
+                <li>Track developmental milestones and individual care plans.</li>
+                <li>Generate reports for better planning, transparency, and accountability.</li>
+                <li>Facilitate secure access for different user roles (Admin, Staff, Public for specific functions like donations).</li>
+            </ul>
+            <p>By leveraging technology, we aim to maximize our impact and ensure the best possible outcomes for the children under our care.</p>
+        </section>
+
+    </div> 
+</div> 
+
+
+<footer class="footer">
+    <div class="footer-container container">
+        <div class="footer-column">
+            <h4>Orphanage Management System</h4>
+            <p>
+                Dedicated to providing a nurturing environment and efficient management for the well-being and future of every child in our care.
+            </p>
+        </div>
+        <div class="footer-column">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="children.html">Our Children</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                
+                <li><a href="Views/donation.html">Donate</a></li>
+                
+                <li><a href="Views/login.html">Login/Register</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+                <h4>Contact Info</h4>
+                 <p>Phone: +789 456 1236</p>
+                 <p>Email: info@omsystem.org</p>
+                 <p>Address: 123 Charity Lane,<br> Hope City, Welfare State<br> IN-110001</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 Orphanage Management System | All Rights Reserved
+        </div>
+    </footer>
+
+<script>
+
+    function updateNavbarForUser(userData) {
+        const loginLink = document.getElementById('login-link');
+        const logoutLink = document.getElementById('logout-link');
+        const userGreeting = document.getElementById('user-greeting');
+        const registerLink = document.getElementById('register-link');
+        const adminLinks = document.querySelectorAll('.admin-link');
+        const staffLinks = document.querySelectorAll('.staff-link');
+        const publicLinks = document.querySelectorAll('.public-link');
+
+
+        adminLinks.forEach(link => link.style.display = 'none');
+        staffLinks.forEach(link => link.style.display = 'none');
+        publicLinks.forEach(link => link.style.display = 'none');
+        if(loginLink) loginLink.style.display = 'none';
+        if(logoutLink) logoutLink.style.display = 'none';
+        if(userGreeting) userGreeting.style.display = 'none';
+        if(registerLink) registerLink.style.display = 'none';
+
+        if (userData && userData.username && userData.role) {
+
+            if(logoutLink) logoutLink.style.display = 'inline-block';
+            if(userGreeting) {
+
+                const safeUsername = (userData.name || userData.username)
+                                    .replace(/</g, "<").replace(/>/g, ">");
+                userGreeting.textContent = `Welcome, ${safeUsername}!`;
+                userGreeting.style.display = 'inline-block';
+            }
+            if (userData.role === 'Admin') {
+                adminLinks.forEach(link => link.style.display = 'block');
+            }
+            if (userData.role === 'Staff') {
+                staffLinks.forEach(link => link.style.display = 'block');
+            }
+
+             publicLinks.forEach(link => link.style.display = 'block');
+
+        } else {
+
+             if(loginLink) loginLink.style.display = 'inline-block';
+             if(registerLink) registerLink.style.display = 'inline-block';
+        }
+    }
+
+    function checkLoginStatus() {
+
+        const loggedInUserData = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+        updateNavbarForUser(loggedInUserData);
+    }
+
+    function handleLogout(event) {
+        if(event) event.preventDefault();
+
+        localStorage.removeItem('loggedInUser');
+
+
+
+        updateNavbarForUser(null);
+        alert("You have been logged out.");
+
+        window.location.href = "home.html";
+    }
+
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</body>
+</html>

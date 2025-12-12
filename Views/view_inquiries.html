@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    
+    <title>View Inquiries - Admin Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a; --primary-dark: #172554; --accent-color: #f59e0b;
+            --light-gray: #f1f5f9; --medium-gray: #e2e8f0; --dark-gray: #475569;
+            --text-color: #1e293b; --card-bg: #ffffff; --success-color: #22c55e;
+            --danger-color: #ef4444; --warning-color: #f59e0b; --info-color: #3b82f6;
+            --border-color: #e5e7eb; --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --gradient-bg: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif; background-color: var(--light-gray);
+            color: var(--text-color); line-height: 1.6; padding-top: 80px; font-size: 15px;
+             display: flex; flex-direction: column; min-height: 100vh;
+        }
+
+        .admin-navbar { width: 100%; background: var(--gradient-bg); color: #fff; position: fixed; top: 0; left: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 15px 60px; box-shadow: var(--shadow-md); }
+        .admin-navbar .brand { font-size: 1.8em; font-weight: 700; display: flex; align-items: center; }
+        .admin-navbar .brand i { color: var(--accent-color); margin-right: 12px; font-size: 1.4em; }
+        .admin-navbar .nav-links { display: flex; align-items: center; gap: 10px; }
+        .admin-navbar .back-link, .admin-navbar .logout-link {
+            color: #fff; padding: 8px 20px; border-radius: 50px; text-decoration: none;
+            font-weight: 600; font-size: 0.95em; transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex; align-items: center; box-shadow: var(--shadow-sm);
+        }
+        .admin-navbar .back-link { background-color: var(--dark-gray); }
+        .admin-navbar .back-link:hover { background-color: #5a6268; transform: translateY(-1px); }
+        .admin-navbar .logout-link { background-color: var(--danger-color); }
+        .admin-navbar .logout-link:hover { background-color: #dc2626; transform: translateY(-1px); }
+        .admin-navbar .back-link i, .admin-navbar .logout-link i { margin-right: 8px; }
+
+
+        .main-content-area { padding: 40px 30px; flex-grow: 1; }
+        .container { max-width: 1400px; margin: 0 auto; background-color: var(--card-bg); padding: 30px 40px; border-radius: 10px; box-shadow: var(--shadow-md); }
+
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--border-color); }
+        .page-header h1 { font-size: 1.8em; font-weight: 600; color: var(--primary-dark); }
+        .breadcrumb a, .breadcrumb span { text-decoration: none; color: var(--dark-gray); font-size: 0.95em; }
+        .breadcrumb a:hover { color: var(--primary-color); text-decoration: underline; }
+        .breadcrumb .current { color: var(--text-color); font-weight: 500; }
+
+
+
+
+
+        .table-container { overflow-x: auto; width: 100%; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
+        .data-table th, .data-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        .data-table thead th { background-color: var(--medium-gray); color: var(--primary-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; z-index: 10; }
+        .data-table tbody tr:nth-child(even) { background-color: var(--light-gray); }
+        .data-table tbody tr:hover { background-color: #dbeafe; }
+        .data-table .message-col { max-width: 400px; white-space: normal; }
+        .data-table .date-col { white-space: nowrap; }
+        .data-table .status-col { text-align: center; font-weight: 500; }
+        .status-new { color: var(--info-color); }
+        .status-responded { color: var(--success-color); }
+        .status-closed { color: var(--dark-gray); }
+
+        .no-results { text-align: center; padding: 30px; color: var(--dark-gray); font-style: italic; }
+
+
+        .footer { text-align: center; padding: 25px; margin-top: 40px; font-size: 0.95em; color: var(--dark-gray); border-top: 1px solid var(--border-color); background-color: var(--card-bg); }
+
+
+        @media (max-width: 992px) {
+            .admin-navbar { padding: 15px 30px; }
+            .page-header h1 { font-size: 1.6em; }
+        }
+        @media (max-width: 768px) {
+            .admin-navbar { padding: 15px 20px; }
+            .admin-navbar .brand { font-size: 1.5em; }
+            .main-content-area { padding: 20px 15px; }
+            .container { padding: 20px; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .data-table { font-size: 0.85em; }
+            .data-table th, .data-table td { padding: 10px 8px; }
+            .data-table .message-col { max-width: none; }
+        }
+    </style>
+</head>
+<body>
+
+    
+    <div class="admin-navbar">
+        <div class="brand"><i class="fas fa-user-shield"></i> Admin Dashboard</div>
+         
+         <div class="nav-links">
+             <a href="admin_dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Dashboard</a>
+             <a href="#" class="logout-link" onclick="logout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
+         </div>
+    </div>
+
+    
+    <div class="main-content-area">
+        <div class="container">
+
+            
+            <div class="page-header">
+                <h1>View Submitted Inquiries</h1>
+                <div class="breadcrumb">
+                    <a href="admin_dashboard.html">Dashboard</a> / <span class="current">Inquiries</span>
+                </div>
+            </div>
+
+            
+            <div class="table-container">
+                <table class="data-table" id="inquiries-table">
+                    <thead>
+                        <tr>
+                            <th class="date-col">Received</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th class="message-col">Message</th>
+                            <th>Regarding Child</th>
+                            <th class="status-col">Status</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="inquiry-table-body">
+                        
+                        <tr><td colspan="7" class="no-results">Loading inquiries... <i class="fas fa-spinner fa-spin"></i></td></tr>
+                    </tbody>
+                </table>
+                 
+                 
+            </div>
+
+        </div> 
+    </div> 
+
+    <footer class="footer">
+         © 2024 Orphanage Management System | All Rights Reserved
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+
+        function logout(event) {
+            if(event) event.preventDefault();
+            localStorage.removeItem('loggedInUser');
+            localStorage.removeItem('adminUser');
+            localStorage.removeItem('loggedInStaff');
+            sessionStorage.clear();
+            alert("You have been logged out.");
+            window.location.href = "login.html";
+        }
+
+        function checkAdminLogin() {
+            const userData = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+            if (!userData || userData.role !== 'Admin') {
+                console.error("Access Denied: User is not logged in as Admin.");
+                alert("Access Denied. Please log in as an Administrator.");
+                window.location.href = "login.html";
+                return false;
+            }
+
+
+
+            return true;
+        }
+
+
+
+
+        async function fetchAndRenderInquiries() {
+            const tableBody = document.getElementById('inquiry-table-body');
+            tableBody.innerHTML = `<tr><td colspan="7" class="no-results">Loading inquiries... <i class="fas fa-spinner fa-spin"></i></td></tr>`;
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/api/inquiries`, {
+                    headers: {
+
+                    }
+                });
+
+                if (!response.ok) {
+                     if (response.status === 403) throw new Error('Access Forbidden. Ensure you are logged in as Admin.');
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const inquiries = await response.json();
+                tableBody.innerHTML = '';
+
+                if (!inquiries || inquiries.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="7" class="no-results">No inquiries found.</td></tr>`;
+                    return;
+                }
+
+                inquiries.forEach(inquiry => {
+                    const row = tableBody.insertRow();
+
+                    let childInfo = 'N/A';
+                    if (inquiry.childId && typeof inquiry.childId === 'object') {
+
+                        childInfo = `${inquiry.childId.first_name || ''} ${inquiry.childId.last_name || ''}`.trim();
+                        if (!childInfo) childInfo = `Child ID: ${inquiry.childId._id}`;
+                    } else if (inquiry.childId) {
+                         childInfo = `Child ID: ${inquiry.childId}`;
+                    }
+
+
+                    const receivedDate = inquiry.receivedAt ? new Date(inquiry.receivedAt).toLocaleString() : 'N/A';
+
+                    row.innerHTML = `
+                        <td class="date-col">${receivedDate}</td>
+                        <td>${inquiry.name || 'N/A'}</td>
+                        <td><a href="mailto:${inquiry.email}">${inquiry.email || 'N/A'}</a></td>
+                        <td>${inquiry.subject || 'N/A'}</td>
+                        <td class="message-col">${inquiry.message || 'N/A'}</td>
+                        <td>${childInfo}</td>
+                        <td class="status-col status-${(inquiry.status || 'new').toLowerCase()}">${inquiry.status || 'New'}</td>
+                        
+                    `;
+                });
+
+            } catch (error) {
+                console.error('Error fetching inquiries:', error);
+                tableBody.innerHTML = `<tr><td colspan="7" class="no-results" style="color: red;">Error loading inquiries: ${error.message}</td></tr>`;
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkAdminLogin()) {
+                fetchAndRenderInquiries();
+            }
+        });
+
+    </script>
+
+</body>
+</html>

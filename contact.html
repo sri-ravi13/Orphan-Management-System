@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Contact Us - Orphanage Management System</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; line-height: 1.7; color: #444; background-color: #f8f9fa; }
+         .navbar {
+             font-family: 'Poppins', sans-serif; width: 100%; background-color: #343a40;
+             position: fixed; top: 0; left: 0; z-index: 1000; display: flex;
+             justify-content: space-between; align-items: center; padding: 10px 30px;
+             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+         }
+         .navbar a {
+              color: #f8f9fa; text-decoration: none; padding: 10px 15px;
+              display: inline-block; text-align: center; font-size: 0.95rem; font-weight: 500;
+              border-radius: 4px; transition: background-color 0.3s ease, color 0.3s ease; vertical-align: middle;
+          }
+         .navbar a:hover, .navbar a.active { background-color: #495057; color: #fff; }
+         .navbar .navbar-brand img { height: 35px; vertical-align: middle; filter: brightness(0) invert(1); }
+         .navbar .navbar-brand a {
+              font-size: 1.25rem; font-weight: 600; text-decoration: none;
+              color: #fff; padding: 5px 0; display: flex; align-items: center;
+              margin-right: 20px; background-color: transparent !important;
+          }
+         .navbar .navbar-brand span { margin-left: 12px; }
+         .navbar .navbar-brand a:hover { background-color: inherit; color: #fff; }
+         .navbar .navbar-links { display: flex; align-items: center; }
+         .navbar .navbar-links a { margin-left: 8px; }
+         .navbar .user-info { display: flex; align-items: center; margin-left: auto; }
+         .navbar .user-greeting {
+              color: #e9ecef; margin-right: 15px; font-size: 0.9rem; font-weight: 500; display: none;
+          }
+         .navbar #logout-link {
+             background-color: #dc3545; padding: 8px 15px; border-radius: 20px;
+             font-size: 0.9rem; display: none;
+         }
+          .navbar #logout-link:hover { background-color: #c82333; }
+         .navbar #login-link, .navbar #register-link { display: inline-block; }
+         .navbar .admin-link, .navbar .staff-link, .navbar .public-link { display: none; }
+
+        .main-content { margin-top: 80px; padding-bottom: 60px; }
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+
+        h1.page-title { text-align: center; margin-bottom: 50px; font-size: 2.5rem; color: #343a40; font-weight: 600; position: relative; padding-bottom: 15px; }
+        h1.page-title::after { content: ''; position: absolute; display: block; width: 70px; height: 3px; background: #007bff; bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        .contact-section { background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.07); display: flex; flex-wrap: wrap; gap: 40px; }
+        .contact-info { flex: 1; min-width: 300px; }
+        .contact-info h2 { font-size: 1.8rem; color: #343a40; margin-bottom: 25px; font-weight: 600; padding-bottom: 10px; border-bottom: 1px solid #e9ecef; }
+        .info-item { display: flex; align-items: flex-start; margin-bottom: 25px; gap: 15px; }
+        .info-item i { font-size: 1.4rem; color: #007bff; margin-top: 4px; width: 25px; text-align: center; }
+        .info-item div p { margin: 0; line-height: 1.6; font-size: 1rem; }
+        .info-item div strong { font-weight: 600; color: #495057; display: block; margin-bottom: 3px; }
+        .contact-form { flex: 1.5; min-width: 350px; }
+        .contact-form h2 { font-size: 1.8rem; color: #343a40; margin-bottom: 25px; font-weight: 600; padding-bottom: 10px; border-bottom: 1px solid #e9ecef; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #495057; font-size: 0.95rem; }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea { width: 100%; padding: 12px 15px; border: 1px solid #ced4da; border-radius: 5px; font-size: 1rem; font-family: inherit; transition: border-color 0.2s ease; }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-group input:focus, .form-group textarea:focus { border-color: #80bdff; outline: none; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); }
+        .submit-btn { background-color: #007bff; color: #fff; padding: 12px 30px; border: none; border-radius: 25px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease; display: inline-block; }
+        .submit-btn:disabled { background-color: #6c757d; cursor: not-allowed; }
+        .submit-btn:hover:not(:disabled) { background-color: #0056b3; transform: translateY(-2px); }
+
+        #form-status { margin-top: 15px; font-size: 0.9em; padding: 10px; border-radius: 4px; display: none; }
+        #form-status.success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+        #form-status.error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        #form-status.loading { color: #004085; background-color: #cce5ff; border: 1px solid #b8daff; }
+        #form-status i { margin-right: 6px; }
+
+
+        .map-section { margin-top: 50px; }
+        .map-section h2 { text-align: center; margin-bottom: 30px; font-size: 1.8rem; color: #343a40; }
+        .map-container { position: relative; overflow: hidden; padding-top: 56.25%; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .map-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .footer { background-color: #343a40; color: #adb5bd; padding: 50px 0 20px 0; margin-top: 60px; }
+        .footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 0 20px; gap: 30px; }
+        .footer-column { flex: 1; min-width: 220px; margin-bottom: 30px; }
+        .footer-column h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; font-weight: 600; border-bottom: 2px solid #495057; padding-bottom: 10px; }
+        .footer-column p, .footer-column ul, .footer-column li { font-size: 0.95rem; color: #adb5bd; line-height: 1.8; }
+        .footer-column ul { list-style: none; padding: 0; } .footer-column ul li { margin-bottom: 10px; } .footer-column ul li a { color: #adb5bd; text-decoration: none; transition: color 0.3s ease; } .footer-column ul li a:hover { color: #fff; text-decoration: none; }
+        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #495057; font-size: 0.9rem; color: #6c757d; }
+         @media (max-width: 768px) { .contact-section { padding: 30px 20px; } .contact-info, .contact-form { min-width: unset; } }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-brand">
+             <a href="home.html">
+                <img src="logo.png" alt="Orphanage Logo">
+                 <span>Orphanage Management System</span>
+            </a>
+        </div>
+        <div class="navbar-links">
+            <a href="home.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="children.html">Our Children</a>
+            <a href="contact.html" class="active">Contact</a>
+            <a href="Views/donation.html" class="public-link">Donate</a>
+            <a href="Views/admin_dashboard.html" class="admin-link">Admin Dashboard</a>
+            <a href="Views/staff_dashboard.html" class="staff-link">Staff Dashboard</a>
+        </div>
+         <div class="user-info">
+            <span class="user-greeting" id="user-greeting">Welcome!</span>
+            <a href="Views/login.html" id="login-link">Login</a>
+            <a href="Views/register.html" id="register-link">Register</a>
+            <a href="#" id="logout-link" onclick="handleLogout(event)">Logout</a>
+         </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1 class="page-title">Get In Touch</h1>
+
+            <div class="contact-section">
+                <div class="contact-info">
+                    <h2>Contact Information</h2>
+                    <p style="margin-bottom: 30px;">We'd love to hear from you! Reach out with any questions, inquiries about adoption or donations, or just to say hello.</p>
+                    <div class="info-item"><i class="fas fa-map-marker-alt"></i><div><strong>Address:</strong><p>123 Charity Lane,<br>Hope City, Welfare State<br>IN-110001</p></div></div>
+                    <div class="info-item"><i class="fas fa-phone-alt"></i><div><strong>Phone:</strong><p>+789 456 1236</p></div></div>
+                    <div class="info-item"><i class="fas fa-envelope"></i><div><strong>Email:</strong><p>info@omsystem.org</p></div></div>
+                    <div class="info-item"><i class="fas fa-clock"></i><div><strong>Office Hours:</strong><p>Monday - Friday: 9:00 AM - 5:00 PM<br>Saturday: 10:00 AM - 2:00 PM<br>Sunday: Closed</p></div></div>
+                </div>
+
+                <div class="contact-form">
+                    <h2>Send Us a Message</h2>
+                    <form id="main-contact-form" onsubmit="submitInquiry(event)">
+                        <input type="hidden" id="childId" name="childId" value="">
+                        <div class="form-group"><label for="contact-name">Your Name</label><input type="text" id="contact-name" name="name" required placeholder="Enter your full name"></div>
+                        <div class="form-group"><label for="contact-email">Your Email</label><input type="email" id="contact-email" name="email" required placeholder="Enter your email address"></div>
+                        <div class="form-group"><label for="contact-subject">Subject</label><input type="text" id="contact-subject" name="subject" required placeholder="e.g., Adoption Inquiry, Donation Question"></div>
+                        <div class="form-group"><label for="contact-message">Your Message</label><textarea id="contact-message" name="message" required placeholder="Write your message here..."></textarea></div>
+                        <button type="submit" class="submit-btn" id="submit-inquiry-btn">Send Message</button>
+                        <p id="form-status"></p>
+                    </form>
+                </div>
+            </div>
+
+            <section class="map-section">
+                 <h2>Our Location</h2>
+                 <div class="map-container">
+                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.361071827171!2d77.216721!3d28.618378!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347d63af%3A0x8a0f8e3e0e4f5e6!2sIndia%20Gate!5e0!3m2!1sen!2sin!4v1678886543210!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                 </div>
+            </section>
+
+        </div> 
+    </div> 
+
+    <footer class="footer">
+        <div class="footer-container container">
+             <div class="footer-column">
+                 <h4>Orphanage Management System</h4>
+                 <p>Dedicated to streamlining operations and enhancing the care provided to every child...</p> 
+             </div>
+            <div class="footer-column">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="children.html">Our Children</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="Views/donation.html" class="public-link">Donate</a></li>
+                    <li><a href="Views/login.html">Login/Register</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contact Info</h4>
+                 <p><i class="fas fa-phone" style="margin-right: 8px;"></i> Phone: +789 456 1236</p>
+                 <p><i class="fas fa-envelope" style="margin-right: 8px;"></i> Email: info@omsystem.org</p>
+                 <p><i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i> Address: 123 Charity Lane,<br>Hope City, Welfare State<br> IN-110001</p>
+             </div>
+        </div>
+        <div class="footer-bottom">© 2024 Orphanage Management System | All Rights Reserved</div>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        const LOGGED_IN_USER_KEY = 'loggedInUser'; 
+
+        function updateNavbarForUser(userData) {
+             const loginLink = document.getElementById('login-link');
+             const logoutLink = document.getElementById('logout-link');
+             const userGreeting = document.getElementById('user-greeting');
+             const registerLink = document.getElementById('register-link');
+             const adminLinks = document.querySelectorAll('.admin-link');
+             const staffLinks = document.querySelectorAll('.staff-link');
+             const publicLinks = document.querySelectorAll('.public-link');
+
+             adminLinks.forEach(link => link.style.display = 'none');
+             staffLinks.forEach(link => link.style.display = 'none');
+             publicLinks.forEach(link => link.style.display = 'none');
+             if(loginLink) loginLink.style.display = 'none';
+             if(logoutLink) logoutLink.style.display = 'none';
+             if(userGreeting) userGreeting.style.display = 'none';
+             if(registerLink) registerLink.style.display = 'none';
+
+             if (userData && userData.username && userData.role) {
+
+                 if(logoutLink) logoutLink.style.display = 'inline-block';
+                 if(userGreeting) {
+                     userGreeting.textContent = `Welcome, ${userData.name || userData.username}!`;
+                     userGreeting.style.display = 'inline-block';
+                 }
+
+                 if (userData.role === 'Admin') { adminLinks.forEach(link => link.style.display = 'inline-block'); }
+                 if (userData.role === 'Staff') { staffLinks.forEach(link => link.style.display = 'inline-block'); }
+                 publicLinks.forEach(link => link.style.display = 'inline-block');
+
+             } else {
+                  if(loginLink) loginLink.style.display = 'inline-block';
+                  if(registerLink) registerLink.style.display = 'inline-block';
+
+                  publicLinks.forEach(link => link.style.display = 'inline-block');
+             }
+         }
+
+        function checkLoginStatus() {
+             let loggedInUserData = null;
+             const storedUserString = localStorage.getItem(LOGGED_IN_USER_KEY);
+             if (storedUserString) {
+                 try { loggedInUserData = JSON.parse(storedUserString); }
+                 catch (e) { console.error("Error parsing stored user data:", e); localStorage.removeItem(LOGGED_IN_USER_KEY); }
+             }
+             updateNavbarForUser(loggedInUserData);
+
+             if (loggedInUserData && loggedInUserData.email) {
+                 const emailInput = document.getElementById('contact-email');
+                 if (emailInput) emailInput.value = loggedInUserData.email;
+             }
+
+              if (loggedInUserData && loggedInUserData.name) {
+                 const nameInput = document.getElementById('contact-name');
+                 if (nameInput) nameInput.value = loggedInUserData.name;
+             }
+        }
+
+        function handleLogout(event) {
+             if(event) event.preventDefault();
+             localStorage.removeItem(LOGGED_IN_USER_KEY);
+             localStorage.removeItem('loggedInStaff');
+             sessionStorage.clear();
+             updateNavbarForUser(null);
+             alert("You have been logged out.");
+             window.location.href = "home.html";
+         }
+
+
+
+        async function submitInquiry(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('main-contact-form');
+            const statusDiv = document.getElementById('form-status');
+            const submitButton = document.getElementById('submit-inquiry-btn');
+
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const subject = document.getElementById('contact-subject').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+            const childId = document.getElementById('childId').value.trim();
+
+            if (!name || !email || !subject || !message) {
+                displayStatus('Please fill out all required fields.', 'error');
+                return;
+            }
+
+            const inquiryData = { name, email, subject, message };
+            if (childId) { inquiryData.childId = childId; }
+
+            displayStatus('Sending message...', 'loading', false);
+            submitButton.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/inquiries`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(inquiryData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayStatus(result.message || 'Message sent! Check your email.', 'success');
+                    form.reset();
+                     document.getElementById('childId').value = '';
+
+                     checkLoginStatus();
+
+                     setTimeout(() => { submitButton.disabled = false; }, 100);
+                } else {
+                    throw new Error(result.message || `Failed to send message (${response.status})`);
+                }
+
+            } catch (error) {
+                console.error('Error submitting inquiry:', error);
+                displayStatus(`Error: ${error.message || 'Could not send message.'}`, 'error', false);
+                submitButton.disabled = false;
+            }
+        }
+
+
+        function displayStatus(message, type = 'info', autoHide = true) {
+            const statusDiv = document.getElementById('form-status');
+            if (!statusDiv) return;
+
+            statusDiv.className = type;
+            let iconClass = 'fas fa-info-circle';
+            if (type === 'success') iconClass = 'fas fa-check-circle';
+            if (type === 'error') iconClass = 'fas fa-exclamation-triangle';
+            if (type === 'loading') iconClass = 'fas fa-spinner fa-spin';
+
+            statusDiv.innerHTML = `<i class="${iconClass}" style="margin-right: 6px;"></i> ${message}`;
+            statusDiv.style.display = 'block';
+
+            if (autoHide && (type === 'success' || type === 'info')) {
+                setTimeout(() => {
+                    if (statusDiv.classList.contains(type)) {
+                        statusDiv.style.display = 'none';
+                        statusDiv.textContent = '';
+                        statusDiv.className = '';
+                    }
+                }, 6000);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            const urlParams = new URLSearchParams(window.location.search);
+            const inquiryType = urlParams.get('inquiry');
+            const childIdFromUrl = urlParams.get('childId');
+            const childNameFromUrl = urlParams.get('child');
+            const hiddenChildIdInput = document.getElementById('childId');
+            const subjectInput = document.getElementById('contact-subject');
+            const messageTextarea = document.getElementById('contact-message');
+
+            if (inquiryType === 'adoption' && (childIdFromUrl || childNameFromUrl)) {
+                 let subjectText = "Adoption Inquiry";
+                 let placeholderText = "Please provide details about your interest in adoption...";
+
+                 if (childIdFromUrl) {
+                     hiddenChildIdInput.value = childIdFromUrl;
+                     const displayName = childNameFromUrl ? (childNameFromUrl.charAt(0).toUpperCase() + childNameFromUrl.slice(1)) : `Child ID ${childIdFromUrl.slice(-6)}`;
+                     subjectText = `Adoption Inquiry for ${displayName}`;
+                     placeholderText = `Please provide details about your interest in adopting ${displayName}...`;
+                 } else if (childNameFromUrl) {
+                      const displayName = childNameFromUrl.charAt(0).toUpperCase() + childNameFromUrl.slice(1);
+                     subjectText = `Adoption Inquiry for ${displayName}`;
+                     placeholderText = `Please provide details about your interest in adopting ${displayName}...`;
+                 }
+
+                 if (subjectInput) subjectInput.value = subjectText;
+                 if (messageTextarea) messageTextarea.placeholder = placeholderText;
+            }
+        });
+    </script>
+
+</body>
+</html>

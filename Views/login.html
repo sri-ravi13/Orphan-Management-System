@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Login - Orphanage Management System</title>
+    <style>
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('../img/2304_q894_004.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(30, 58, 138, 0.1) 0%, transparent 70%);
+            z-index: 0;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .login-container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-container h2 {
+            margin-bottom: 25px;
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 2em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-container .error {
+            color: #dc3545;
+            margin-bottom: 20px;
+            min-height: 1.2em;
+            font-size: 0.9em;
+        }
+
+        .login-container input[type="email"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .login-container input[type="email"]:focus,
+        .login-container input[type="password"]:focus {
+            border-color: #1e3a8a;
+            outline: none;
+            box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
+        }
+
+        .login-container input[type="submit"] {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+        }
+
+        .login-container input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(30, 58, 138, 0.4);
+        }
+
+        .login-container .link-options {
+            margin-top: 20px;
+            font-size: 0.95em;
+            color: #475569;
+        }
+
+        .login-container .link-options a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-container .link-options a:hover {
+            color: #1e40af;
+            text-decoration: underline;
+        }
+
+        .login-logo {
+            margin-bottom: 20px;
+        }
+        .login-logo img {
+            width: 100px;
+            height: auto;
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-logo">
+            <img src="../img/logo.png" alt="Orphanage Management Logo">
+        </div>
+        <h2>Login</h2>
+        <div id="error-message" class="error"></div>
+        <form id="login-form">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+        <div class="link-options">
+            <a href="../home.html">Back to Home</a> |
+            <a href="register.html">Register</a> 
+        </div>
+        <div class="footer-note">
+            © 2024 Orphanage Management System | All Rights Reserved
+        </div>
+    </div>
+
+    <script>
+    const API_BASE_URL = 'http://localhost:8000';
+
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('error-message');
+
+        errorMessage.textContent = '';
+
+        if (email.trim() === '' || password.trim() === '') {
+            errorMessage.textContent = 'Email and Password are required.';
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email, password: password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.user) {
+
+
+                const userData = {
+                    id: data.user._id,
+                    username: data.user.username,
+                    name: data.user.name || data.user.username,
+                    role: data.user.role
+                };
+                localStorage.setItem('loggedInUser', JSON.stringify(userData));
+
+
+
+                if (data.user.role === 'Admin') {
+                    alert('Admin login successful! Redirecting...');
+                    window.location.href = 'admin_dashboard.html';
+                } else if (data.user.role === 'Staff') {
+
+                    localStorage.setItem('loggedInStaff', JSON.stringify(userData));
+                    alert('Staff login successful! Redirecting...');
+                    window.location.href = 'staff_dashboard.html';
+                } else if (data.user.role === 'Public') {
+                    alert('Login successful! Redirecting...');
+                    window.location.href = '../public.html';
+                } else {
+                    console.warn("Login successful but role not recognized for specific redirect:", data.user.role);
+                    errorMessage.textContent = 'Login successful, but no dashboard is configured for your role.';
+
+                     window.location.href = '../public.html';
+                }
+            } else {
+                errorMessage.textContent = data.message || 'Login failed. Please check your credentials.';
+            }
+        } catch (error) {
+            errorMessage.textContent = 'An error occurred connecting to the server.';
+            console.error('Login error:', error);
+        }
+    });
+    </script>
+</body>
+</html>

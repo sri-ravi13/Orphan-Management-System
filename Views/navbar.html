@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        .navbar {
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+            background-color: #343a40;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: #f8f9fa;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar a:hover, .navbar a.active {
+            background-color: #495057;
+            color: #fff;
+        }
+
+        .navbar .navbar-brand img {
+             height: 35px;
+             vertical-align: middle;
+             filter: brightness(0) invert(1);
+         }
+
+        .navbar .navbar-brand a {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #fff;
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+         .navbar .navbar-brand span {
+             margin-left: 12px;
+         }
+         .navbar .navbar-brand a:hover { background-color: inherit; }
+
+
+        .navbar .navbar-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .navbar-links a {
+            margin-left: 8px;
+        }
+
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+         .navbar .user-greeting {
+            color: #e9ecef;
+            margin-right: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+         .navbar #logout-link {
+             background-color: #dc3545;
+             padding: 8px 15px;
+             border-radius: 20px;
+             font-size: 0.9rem;
+         }
+         .navbar #logout-link:hover { background-color: #c82333; }
+
+        .content {
+            margin-top: 70px;
+            padding: 20px;
+        }
+
+
+        .admin-link, .staff-link, .public-link, #logout-link, .user-greeting {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-brand">
+            
+            <a href="../home.html">
+                 <img src="../img/logo.png" alt="Orphanage Logo"> 
+                 <span>Orphanage Management System</span>
+            </a>
+        </div>
+        <div class="navbar-links" id="navbar-links">
+            
+            <a href="../home.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../children.html">Our Children</a>
+            <a href="../contact.html">Contact</a>
+
+            
+            
+            <a href="admin_dashboard.html" class="admin-link">Dashboard</a>
+            <a href="manage_users.html" class="admin-link">Manage Users</a>
+            <a href="child_records.html" class="admin-link">Child Records</a>
+            <a href="health_records.html" class="admin-link">Health Records</a>
+            <a href="educational_management.html" class="admin-link">Education</a>
+            <a href="generate_reports.html" class="admin-link">Reports</a>
+            <a href="messages.html" class="admin-link">Messages</a>
+            <a href="staff_child_management.html" class="admin-link">Staff/Child Mgmt</a>
+            <a href="manage_adoptions.html" class="admin-link">Adoptions</a>
+            <a href="schedule_work.html" class="admin-link">Schedule Work</a>
+            <a href="manage_donation.html" class="admin-link">Donations</a>
+
+            
+            <a href="staff_dashboard.html" class="staff-link">Dashboard</a>
+             
+            <a href="health_records.html" class="staff-link">Health Records</a>
+            <a href="educational_management.html" class="staff-link">Education</a>
+            <a href="messages.html" class="staff-link">Messages</a>
+
+            
+             <a href="../Views/donation.html" class="public-link">Donate</a> 
+
+        </div>
+         
+         <div class="user-info">
+            <span class="user-greeting" id="user-greeting">Welcome, User!</span>
+            <a href="login.html" id="login-link">Login</a>
+            <a href="#" id="logout-link" onclick="handleLogout(event)">Logout</a>
+         </div>
+    </div>
+
+    
+   <!-- <div class="content">
+        <h1>Welcome to the Orphanage Management System</h1>
+        <button onclick="simulateLogin('Admin', 'Admin User')">Simulate Admin Login</button>
+        <button onclick="simulateLogin('Staff', 'Staff User')">Simulate Staff Login</button>
+         <button onclick="simulateLogin('Public', 'Public User')">Simulate Public Login</button>
+        <button onclick="handleLogout()">Simulate Logout</button>
+    </div>-->
+
+    <script>
+        function updateNavbarForUser(userData) {
+            const loginLink = document.getElementById('login-link');
+            const logoutLink = document.getElementById('logout-link');
+            const userGreeting = document.getElementById('user-greeting');
+            const allRoleLinks = document.querySelectorAll('.admin-link, .staff-link, .public-link');
+
+
+            allRoleLinks.forEach(link => link.style.display = 'none');
+
+            if (userData && userData.username && userData.role) {
+
+                loginLink.style.display = 'none';
+                logoutLink.style.display = 'inline-block';
+                userGreeting.textContent = `Welcome, ${userData.username}!`;
+                userGreeting.style.display = 'inline-block';
+
+
+                if (userData.role === 'Admin') {
+                    document.querySelectorAll('.admin-link').forEach(link => link.style.display = 'block');
+                } else if (userData.role === 'Staff') {
+                    document.querySelectorAll('.staff-link').forEach(link => link.style.display = 'block');
+
+                    document.querySelectorAll('.public-link').forEach(link => link.style.display = 'block');
+                } else if (userData.role === 'Public') {
+                    document.querySelectorAll('.public-link').forEach(link => link.style.display = 'block');
+                }
+
+            } else {
+
+                loginLink.style.display = 'block';
+                logoutLink.style.display = 'none';
+                userGreeting.style.display = 'none';
+
+            }
+        }
+
+
+        function checkLoginStatus() {
+
+
+            const loggedInUserData = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+            updateNavbarForUser(loggedInUserData);
+        }
+
+
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+
+
+        function simulateLogin(role, username) {
+            const userData = { username: username, role: role, id: 'simulated-' + role.toLowerCase() + '-id' };
+            localStorage.setItem('loggedInUser', JSON.stringify(userData));
+
+            if(role === 'Staff') localStorage.setItem('loggedInStaff', JSON.stringify(userData));
+            updateNavbarForUser(userData);
+            alert(`${role} login simulated.`);
+
+
+
+
+        }
+
+        function handleLogout(event) {
+             if(event) event.preventDefault();
+             localStorage.removeItem('loggedInUser');
+             localStorage.removeItem('loggedInStaff');
+             updateNavbarForUser(null);
+             alert("You have been logged out.");
+
+             window.location.href = "../home.html";
+         }
+
+    </script>
+</body>
+</html>

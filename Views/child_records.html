@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    
+    <title>Child Records - Orphanage Management System</title>
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            position: relative;
+            min-height: 100vh;
+        }
+
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('../img/2304.q894.002.jpg') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -1;
+
+            background-color: rgba(255, 255, 255, 0.1);
+            background-blend-mode: overlay;
+        }
+
+
+        .header {
+            background-color: rgba(52, 73, 94, 0.9);
+            color: #ffffff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.8em;
+        }
+
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+
+        .card {
+            margin: 30px 0;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #34495e;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+
+        .form-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="date"],
+        .form-container input[type="number"],
+        .form-container input[type="file"],
+        .form-container select {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-container input[type="file"] {
+             padding: 8px 10px;
+        }
+
+
+        #photo-preview {
+            display: none;
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 50%;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 2px solid #eee;
+            object-fit: cover;
+        }
+
+        .form-container input[type="text"]:focus,
+        .form-container input[type="date"]:focus,
+        .form-container input[type="number"]:focus,
+        .form-container input[type="file"]:focus,
+        .form-container select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+
+        .child-list table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .child-list th,
+        .child-list td {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .child-list th {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .child-list tbody tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+
+        .child-list tbody tr:hover {
+            background-color: #f1f5f8;
+        }
+
+
+        .child-photo {
+            max-width: 50px;
+            max-height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            vertical-align: middle;
+        }
+
+
+        .action-buttons {
+             display: flex;
+             gap: 8px;
+             flex-wrap: wrap;
+        }
+
+        .edit-button,
+        .delete-button {
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-button {
+            background-color: #f39c12;
+        }
+
+        .edit-button:hover {
+            background-color: #e67e22;
+            transform: translateY(-1px);
+        }
+
+        .delete-button {
+            background-color: #e74c3c;
+        }
+
+        .delete-button:hover {
+            background-color: #c0392b;
+            transform: translateY(-1px);
+        }
+
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+            .card {
+                padding: 20px;
+            }
+            .form-container input[type="text"],
+            .form-container input[type="date"],
+            .form-container input[type="number"],
+            .form-container input[type="file"],
+            .form-container select,
+            .form-container input[type="submit"] {
+                font-size: 0.95rem;
+                padding: 10px 12px;
+            }
+             .child-list table, .child-list thead, .child-list tbody, .child-list th, .child-list td, .child-list tr {
+                display: block;
+            }
+             .child-list thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+             .child-list tr {
+                 border: 1px solid #ccc;
+                 margin-bottom: 10px;
+                 border-radius: 6px;
+                 background-color: rgba(255, 255, 255, 0.95) !important;
+            }
+             .child-list td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+                min-height: 30px;
+                 display: flex;
+                 align-items: center;
+                 justify-content: flex-end;
+            }
+             .child-list td:before {
+
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                color: #34495e;
+
+                 line-height: inherit;
+                 top: 50%;
+                 transform: translateY(-50%);
+            }
+
+            .child-list td[data-label="Photo"] {
+                 justify-content: flex-end;
+            }
+            .child-list td[data-label="Photo"] img {
+                margin-left: 0;
+                max-width: 40px;
+                max-height: 40px;
+            }
+
+            .child-list td[data-label="Actions"] {
+                 padding-left: 10px;
+                 justify-content: flex-end;
+            }
+            .child-list td[data-label="Actions"]:before {
+                content: "";
+            }
+             .child-list td:last-child {
+                 border-bottom: 0;
+            }
+            .action-buttons {
+                justify-content: flex-end;
+                padding-top: 0;
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    
+    <header class="header">
+        <h1>Orphanage Management System</h1>
+    </header>
+
+    <div class="dashboard-container">
+
+        
+        <div class="card form-container">
+            <h3 id="form-title">Add New Child Record</h3>
+            
+            <form id="child-form" onsubmit="return validateForm();"> 
+                <input type="hidden" id="child_id" name="child_id" value="">
+
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" placeholder="Enter first name" required>
+
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" placeholder="Enter last name" required>
+
+                <label for="date_of_birth">Date of Birth:</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" required>
+
+                
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" placeholder="Enter current age" required min="0">
+
+                <label for="gender">Gender:</label>
+                <select name="gender" id="gender" required>
+                    <option value="" disabled selected>Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="admission_date">Admission Date:</label>
+                <input type="date" id="admission_date" name="admission_date" required>
+
+                <label for="photo">Photo:</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+                <img id="photo-preview" src="#" alt="Photo Preview">
+
+                <input type="submit" id="submit-button" value="Add Child">
+            </form>
+        </div>
+
+        
+        <div class="card child-list">
+            <h3>Existing Child Records</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Photo</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Age</th> 
+                        <th>Gender</th>
+                        <th>Admission Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="child-records">
+                     
+                     <tr>
+                         <td colspan="9" style="text-align: center; padding: 20px;">Loading records...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        const DEFAULT_PHOTO = '/img/default_avatar.png';
+
+
+        async function validateForm() {
+
+            const firstName = document.getElementById('first_name').value.trim();
+            const lastName = document.getElementById('last_name').value.trim();
+            const dateOfBirth = document.getElementById('date_of_birth').value;
+            const ageInput = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            const admissionDate = document.getElementById('admission_date').value;
+            const photoInput = document.getElementById('photo');
+            const childId = document.getElementById('child_id').value;
+
+
+            if (!firstName) { alert('First Name is required.'); return false; }
+            if (!lastName) { alert('Last Name is required.'); return false; }
+            if (!dateOfBirth) { alert('Date of Birth is required.'); return false; }
+            if (ageInput === '' || ageInput === null) { alert('Age is required.'); return false; }
+            if (!gender) { alert('Gender is required.'); return false; }
+            if (!admissionDate) { alert('Admission Date is required.'); return false; }
+
+
+            const age = parseInt(ageInput, 10);
+            if (isNaN(age) || age < 0) {
+                alert('Please enter a valid non-negative number for Age.');
+                return false;
+            }
+
+
+            const dob = new Date(dateOfBirth);
+            const admDate = new Date(admissionDate);
+            if (dob >= admDate) {
+                 alert('Admission Date must be after Date of Birth.');
+                 return false;
+            }
+             if (dob > new Date()) {
+                 alert('Date of Birth cannot be in the future.');
+                 return false;
+             }
+             if (admDate > new Date()) {
+                  alert('Admission Date cannot be in the future.');
+                  return false;
+             }
+
+
+            const formData = new FormData();
+            formData.append('first_name', firstName);
+            formData.append('last_name', lastName);
+            formData.append('date_of_birth', dob.toISOString());
+            formData.append('age', age);
+            formData.append('gender', gender);
+            formData.append('admission_date', admDate.toISOString());
+
+
+            if (photoInput.files[0]) {
+                formData.append('photo', photoInput.files[0]);
+            }
+
+            const method = childId ? 'PUT' : 'POST';
+            const url = childId ? `${API_BASE_URL}/api/children/${childId}` : `${API_BASE_URL}/api/children`;
+
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = true;
+            submitButton.value = childId ? 'Updating...' : 'Adding...';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+
+                    body: formData
+
+
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(`Child record ${childId ? 'updated' : 'added'} successfully!`);
+                    fetchChildRecords();
+                    resetForm();
+                } else {
+                    let errorMsg = `HTTP error! Status: ${response.status} ${response.statusText}`;
+                    try {
+                         const errorData = await response.json();
+                         errorMsg = errorData.message || errorData.error || JSON.stringify(errorData);
+                    } catch (e) { console.warn("Response was not JSON:", e); }
+                    console.error('Error submitting child record:', errorMsg);
+                    alert(`Error submitting child record: ${errorMsg}`);
+                }
+            } catch (error) {
+                console.error('Network or other error:', error);
+                alert('Network error or server is down. Could not submit record.');
+            } finally {
+                 submitButton.disabled = false;
+                 submitButton.value = childId ? 'Update Child' : 'Add Child';
+            }
+
+            return false;
+        }
+
+
+        async function fetchChildRecords() {
+            const childRecordsTableBody = document.getElementById('child-records');
+            childRecordsTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px;">Loading records... <i class="fas fa-spinner fa-spin"></i></td></tr>`;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/children`, {
+                     headers: { }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const children = await response.json();
+                renderChildRecords(children);
+
+            } catch (error) {
+                console.error('Error fetching child records:', error);
+                childRecordsTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px; color: red;">Failed to load records. Please try again later.</td></tr>`;
+            }
+        }
+
+
+        function renderChildRecords(children) {
+             const childRecordsTableBody = document.getElementById('child-records');
+             childRecordsTableBody.innerHTML = '';
+
+            if (!children || children.length === 0) {
+                childRecordsTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px;">No child records found.</td></tr>`;
+                return;
+            }
+
+
+             const escapeAttr = (str) => str ? String(str).replace(/'/g, "\\'").replace(/"/g, "") : '';
+
+            children.forEach(child => {
+                const row = document.createElement('tr');
+
+                const dobFormatted = child.date_of_birth ? new Date(child.date_of_birth).toLocaleDateString() : 'N/A';
+                const admissionFormatted = child.admission_date ? new Date(child.admission_date).toLocaleDateString() : 'N/A';
+
+                const dobForInput = child.date_of_birth ? new Date(child.date_of_birth).toISOString().split('T')[0] : '';
+                const admissionForInput = child.admission_date ? new Date(child.admission_date).toISOString().split('T')[0] : '';
+
+                const age = child.age !== undefined && child.age !== null ? child.age : 'N/A';
+                const id = child._id || 'N/A';
+                const firstName = child.first_name || 'N/A';
+                const lastName = child.last_name || 'N/A';
+                const gender = child.gender || 'N/A';
+
+
+                let photoDisplayUrl = DEFAULT_PHOTO;
+                if (child.photo_url && child.photo_url !== '/img/default_avatar.png') {
+
+                    if (child.photo_url.startsWith('/uploads/')) {
+                        photoDisplayUrl = `${API_BASE_URL}${child.photo_url}`;
+                    } else {
+
+
+                        console.warn(`Unexpected photo_url format found: ${child.photo_url}`);
+                         photoDisplayUrl = DEFAULT_PHOTO;
+                    }
+                }
+
+                const photoUrlForEdit = photoDisplayUrl;
+
+                row.innerHTML = `
+                    <td data-label="ID">${id}</td>
+                    <td data-label="Photo">
+                        <img src="${escapeAttr(photoDisplayUrl)}" alt="${escapeAttr(firstName)} ${escapeAttr(lastName)}" class="child-photo" onerror="this.onerror=null; this.src='${DEFAULT_PHOTO}';">
+                    </td>
+                    <td data-label="First Name">${escapeAttr(firstName)}</td>
+                    <td data-label="Last Name">${escapeAttr(lastName)}</td>
+                    <td data-label="Date of Birth">${dobFormatted}</td>
+                    <td data-label="Age">${age}</td>
+                    <td data-label="Gender">${escapeAttr(gender)}</td>
+                    <td data-label="Admission Date">${admissionFormatted}</td>
+                    <td data-label="Actions">
+                        <div class="action-buttons">
+                            <button class="edit-button" onclick="editChild('${escapeAttr(id)}', '${escapeAttr(firstName)}', '${escapeAttr(lastName)}', '${escapeAttr(dobForInput)}', '${age}', '${escapeAttr(gender)}', '${escapeAttr(admissionForInput)}', '${escapeAttr(photoUrlForEdit)}')">Edit</button>
+                            <button class="delete-button" onclick="deleteChild('${escapeAttr(id)}')">Delete</button>
+                        </div>
+                    </td>
+                `;
+                childRecordsTableBody.appendChild(row);
+            });
+        }
+
+
+        function resetForm() {
+            const form = document.getElementById('child-form');
+            const photoInput = document.getElementById('photo');
+            const photoPreview = document.getElementById('photo-preview');
+
+            document.getElementById('form-title').innerText = 'Add New Child Record';
+            form.reset();
+            document.getElementById('child_id').value = '';
+            document.getElementById('submit-button').value = 'Add Child';
+            document.getElementById('submit-button').disabled = false;
+
+            photoInput.value = null;
+            photoPreview.style.display = 'none';
+            photoPreview.src = '#';
+
+
+
+        }
+
+
+        function editChild(id, firstName, lastName, dateOfBirth, age, gender, admissionDate, photoUrl) {
+            document.getElementById('form-title').innerText = 'Edit Child Record';
+            document.getElementById('child_id').value = id;
+            document.getElementById('first_name').value = firstName;
+            document.getElementById('last_name').value = lastName;
+            document.getElementById('date_of_birth').value = dateOfBirth;
+            document.getElementById('age').value = age !== 'N/A' ? age : '';
+            document.getElementById('gender').value = gender;
+            document.getElementById('admission_date').value = admissionDate;
+            document.getElementById('submit-button').value = 'Update Child';
+
+            const photoPreview = document.getElementById('photo-preview');
+            const photoInput = document.getElementById('photo');
+            photoInput.value = null;
+
+
+            if (photoUrl && photoUrl !== DEFAULT_PHOTO && !photoUrl.endsWith('/undefined')) {
+                photoPreview.src = photoUrl;
+                photoPreview.style.display = 'block';
+            } else {
+                photoPreview.style.display = 'none';
+                photoPreview.src = '#';
+            }
+
+            document.getElementById('form-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+
+        async function deleteChild(childId) {
+            if (!confirm('Are you sure you want to delete this child record? This action cannot be undone and will remove associated records.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/children/${childId}`, {
+                    method: 'DELETE',
+                     headers: { }
+                });
+
+                if (response.ok) {
+                    alert('Child record deleted successfully!');
+                    fetchChildRecords();
+                } else {
+                    let errorMsg = 'Unknown error occurred while deleting.';
+                     try {
+                         const errorData = await response.json();
+                         errorMsg = errorData.message || errorData.error || JSON.stringify(errorData);
+                    } catch (e) { errorMsg = `HTTP error! Status: ${response.status} ${response.statusText}`; }
+                    console.error('Error deleting child record:', errorMsg);
+                    alert(`Error deleting child record: ${errorMsg}`);
+                }
+            } catch (error) {
+                console.error('Network or other error during deletion:', error);
+                alert('Network error or server is down. Could not delete record.');
+            }
+        }
+
+
+        const photoInput = document.getElementById('photo');
+        const photoPreview = document.getElementById('photo-preview');
+
+        photoInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoPreview.src = e.target.result;
+                    photoPreview.style.display = 'block';
+                }
+                reader.onerror = function(e) {
+                    console.error("File reading error:", e);
+                    alert("Error reading the selected file.");
+                    photoPreview.style.display = 'none';
+                    photoPreview.src = '#';
+                }
+                reader.readAsDataURL(file);
+            } else {
+
+                photoPreview.style.display = 'none';
+                photoPreview.src = '#';
+                if (file) {
+                    alert("Please select a valid image file (e.g., JPG, PNG, GIF).");
+                    photoInput.value = null;
+                }
+            }
+        });
+
+
+
+        window.onload = fetchChildRecords;
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Child Details - Orphanage Management System</title>
+    <style>
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; line-height: 1.7; color: #444; background-color: #f8f9fa; }
+
+
+        .navbar {
+             font-family: 'Poppins', sans-serif; width: 100%; background-color: #343a40;
+             position: fixed; top: 0; left: 0; z-index: 1000; display: flex;
+             justify-content: space-between; align-items: center; padding: 10px 30px;
+             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+         }
+        .navbar a { color: #f8f9fa; text-decoration: none; padding: 10px 15px; display: block; text-align: center; font-size: 0.95rem; font-weight: 500; border-radius: 4px; transition: background-color 0.3s ease, color 0.3s ease; }
+        .navbar a:hover, .navbar a.active { background-color: #495057; color: #fff; }
+        .navbar .navbar-brand img { height: 35px; vertical-align: middle; filter: brightness(0) invert(1); }
+        .navbar .navbar-brand a { font-size: 1.25rem; font-weight: 600; text-decoration: none; color: #fff; padding: 5px 0; display: flex; align-items: center; margin-right: 20px; }
+        .navbar .navbar-brand span { margin-left: 12px; }
+        .navbar .navbar-brand a:hover { background-color: inherit; }
+        .navbar .navbar-links { display: flex; align-items: center; }
+        .navbar .navbar-links a { margin-left: 8px; }
+        .navbar .user-info { display: flex; align-items: center; margin-left: auto; }
+        .navbar .user-greeting { color: #e9ecef; margin-right: 15px; font-size: 0.9rem; font-weight: 500; display: none; }
+        .navbar #logout-link { background-color: #dc3545; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; display: none; }
+        .navbar #logout-link:hover { background-color: #c82333; }
+
+        .navbar #login-link, .navbar #register-link { display: inline-block; }
+        .admin-link, .staff-link, .public-link { display: none; }
+
+
+        .main-content { margin-top: 80px; padding-bottom: 60px; }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+
+
+        .loading-message, .error-message { text-align: center; padding: 50px; font-size: 1.1em; color: #666; }
+        .error-message { color: red; }
+
+        .child-detail-card {
+            background-color: #fff; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            overflow: hidden; padding: 40px; display: none;
+        }
+        .detail-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e9ecef; }
+        .detail-header h1 { font-size: 2.2rem; color: #343a40; font-weight: 600; margin-bottom: 5px; }
+        .back-link { display: inline-block; margin-top: 15px; font-size: 0.9rem; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .back-link i { margin-right: 5px;}
+        .detail-body { display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; }
+        .child-image-container { flex: 0 0 250px; text-align: center; }
+        .child-image-container img { width: 100%; max-width: 250px; height: auto; border-radius: 8px; border: 4px solid #e9ecef; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 15px; background-color: #eee; }
+        .child-info-container { flex: 1; min-width: 300px; }
+        .detail-item { margin-bottom: 18px; }
+        .detail-item strong { display: block; font-weight: 600; color: #495057; margin-bottom: 4px; font-size: 1.05rem; }
+        .detail-item span { color: #555; font-size: 1rem; line-height: 1.6; }
+        .adoption-status {
+             font-weight: bold;
+             padding: 5px 10px;
+             border-radius: 5px;
+             display: inline-block;
+         }
+         .status-available { background-color: #2ecc71; color: white; }
+         .status-pending { background-color: #f39c12; color: white; }
+         .status-adopted { background-color: #95a5a6; color: white; }
+
+        .adoption-cta { margin-top: 30px; text-align: center; border-top: 1px solid #eee; padding-top: 30px; }
+        .adoption-cta .btn { background-color: #28a745; color: #fff; padding: 12px 35px; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 1.1rem; transition: background-color 0.3s ease, transform 0.2s ease; display: inline-block; border: none; cursor: pointer; }
+        .adoption-cta .btn:hover { background-color: #218838; transform: translateY(-2px); }
+        .adoption-cta p { font-size: 0.9rem; color: #6c757d; margin-bottom: 15px; }
+
+
+        .footer { background-color: #343a40; color: #adb5bd; padding: 50px 0 20px 0; margin-top: 60px; }
+        .footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 0 20px; gap: 30px; }
+        .footer-column { flex: 1; min-width: 220px; margin-bottom: 30px; }
+        .footer-column h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; font-weight: 600; border-bottom: 2px solid #495057; padding-bottom: 10px; }
+        .footer-column p, .footer-column ul, .footer-column li { font-size: 0.95rem; color: #adb5bd; line-height: 1.8; }
+        .footer-column ul { list-style: none; padding: 0; } .footer-column ul li { margin-bottom: 10px; } .footer-column ul li a { color: #adb5bd; text-decoration: none; transition: color 0.3s ease; } .footer-column ul li a:hover { color: #fff; text-decoration: none; }
+        .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #495057; font-size: 0.9rem; color: #6c757d; }
+
+         @media (max-width: 768px) {
+             .detail-body { flex-direction: column; }
+             .child-image-container { flex: 0 0 auto; width: 100%; max-width: 250px; margin: 0 auto 30px auto; }
+             .child-info-container { min-width: unset; }
+             .container { padding: 0 15px;}
+             .child-detail-card { padding: 30px;}
+         }
+    </style>
+</head>
+<body>
+
+    
+    <div class="navbar">
+        <div class="navbar-brand">
+            <a href="public.html"> 
+                <img src="logo.png" alt="Orphanage Logo"> 
+                <span>Orphanage Management System</span>
+            </a>
+        </div>
+        <div class="navbar-links">
+            <a href="public.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="children.html" class="active">Our Childrens</a> 
+            <a href="contact.html">Contact</a>
+            <a href="Views/donation.html" class="public-link">Donate</a>
+            <a href="Views/admin_dashboard.html" class="admin-link">Admin Dashboard</a>
+            <a href="Views/staff_dashboard.html" class="staff-link">Staff Dashboard</a>
+        </div>
+        <div class="user-info">
+            <span class="user-greeting" id="user-greeting">Welcome!</span>
+            <a href="Views/login.html" id="login-link">Login</a>
+            <a href="Views/register.html" id="register-link">Register</a>
+            <a href="#" id="logout-link" onclick="handleLogout(event)">Logout</a>
+        </div>
+    </div>
+
+    
+    <div class="main-content">
+        <div class="container">
+            <div id="loading-message" class="loading-message">Loading child details... <i class="fas fa-spinner fa-spin"></i></div>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+
+            
+            <div class="child-detail-card" id="child-detail-card">
+                <div class="detail-header">
+                    <h1 id="child-name">Child Name</h1>
+                    <a href="children.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Our Children</a>
+                </div>
+                <div class="detail-body">
+                    
+                    <div class="child-image-container">
+                        <img src="img/child-placeholder.png" alt="Child's Profile Picture" id="child-image">
+                    </div>
+                    
+                    <div class="child-info-container">
+                        <div class="detail-item">
+                            <strong>Age:</strong>
+                            <span id="child-age">N/A</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <strong>Adoption Status:</strong>
+                            
+                            <span id="child-adoption-status" class="adoption-status status-available">Available for Adoption</span>
+                        </div>
+
+                        
+                        <div class="adoption-cta">
+                            <p>Interested in providing a loving home for <span class="dynamic-child-name">this child</span>?</p>
+                            <a href="contact.html" class="btn" id="adoption-inquiry-link">Inquire About Adoption</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container container">
+             <div class="footer-column">
+                 <h4>Orphanage Management System</h4>
+                 <p>Dedicated to streamlining operations and enhancing the care provided to every child, ensuring a brighter future through efficient management and compassionate support.</p>
+             </div>
+             <div class="footer-column">
+                 <h4>Quick Links</h4>
+                 <ul>
+                     <li><a href="home.html">Home</a></li>
+                     <li><a href="children.html">Our Children</a></li>
+                     <li><a href="about.html">About Us</a></li>
+                     <li><a href="contact.html">Contact</a></li>
+                     
+                     <li><a href="Views/donation.html">Donate</a></li>
+                     
+                     <li><a href="Views/login.html">Login/Register</a></li>
+                 </ul>
+             </div>
+             <div class="footer-column">
+                 <h4>Contact Info</h4>
+                 <p><i class="fas fa-phone" style="margin-right: 8px;"></i> Phone: +789 456 1236</p>
+                 <p><i class="fas fa-envelope" style="margin-right: 8px;"></i> Email: info@omsystem.org</p>
+                 <p><i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i> Address: 123 Charity Lane,<br> Hope City, Welfare State<br> IN-110001</p>
+             </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 Orphanage Management System | All Rights Reserved
+        </div>
+    </footer>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        const DEFAULT_CHILD_PHOTO_ROOT = 'img/child-placeholder.png';
+
+
+        function updateNavbarForUser(userData) {
+            const loginLink = document.getElementById('login-link');
+            const logoutLink = document.getElementById('logout-link');
+            const userGreeting = document.getElementById('user-greeting');
+            const registerLink = document.getElementById('register-link');
+            const adminLinks = document.querySelectorAll('.admin-link');
+            const staffLinks = document.querySelectorAll('.staff-link');
+            const publicLinks = document.querySelectorAll('.public-link');
+
+            adminLinks.forEach(link => link.style.display = 'none');
+            staffLinks.forEach(link => link.style.display = 'none');
+            publicLinks.forEach(link => link.style.display = 'none');
+            if(loginLink) loginLink.style.display = 'none';
+            if(logoutLink) logoutLink.style.display = 'none';
+            if(userGreeting) userGreeting.style.display = 'none';
+            if(registerLink) registerLink.style.display = 'none';
+
+            if (userData && userData.username && userData.role) {
+                if(logoutLink) logoutLink.style.display = 'inline-block';
+                if(userGreeting) {
+                    userGreeting.textContent = `Welcome, ${userData.name || userData.username}!`;
+                    userGreeting.style.display = 'inline-block';
+                }
+                if (userData.role === 'Admin') { adminLinks.forEach(link => link.style.display = 'block'); }
+                if (userData.role === 'Staff') { staffLinks.forEach(link => link.style.display = 'block'); }
+                publicLinks.forEach(link => link.style.display = 'block');
+            } else {
+                 if(loginLink) loginLink.style.display = 'inline-block';
+                 if(registerLink) registerLink.style.display = 'inline-block';
+            }
+        }
+        function checkLoginStatus() { const loggedInUserData = JSON.parse(localStorage.getItem('loggedInUser') || 'null'); updateNavbarForUser(loggedInUserData); }
+        function handleLogout(event) { if(event) event.preventDefault(); localStorage.removeItem('loggedInUser'); localStorage.removeItem('loggedInStaff'); updateNavbarForUser(null); alert("You have been logged out."); window.location.href = "home.html"; }
+
+
+
+        async function fetchAndPopulateChildDetails() {
+            const loadingMsg = document.getElementById('loading-message');
+            const errorMsg = document.getElementById('error-message');
+            const detailCard = document.getElementById('child-detail-card');
+            const urlParams = new URLSearchParams(window.location.search);
+            const childId = urlParams.get('id');
+
+            if (!childId) {
+                loadingMsg.style.display = 'none';
+                errorMsg.textContent = 'No child ID specified in the URL.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/children/${childId}`);
+                if (!response.ok) {
+                    if (response.status === 404) throw new Error('Child not found.');
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+                const child = await response.json();
+
+
+                const childFullName = `${child.first_name || ''} ${child.last_name || ''}`.trim() || 'Child Details';
+                document.getElementById('child-name').textContent = childFullName;
+                document.title = `${childFullName} - Orphanage MS`;
+
+                const photoUrl = child.photo_url ? `${API_BASE_URL}${child.photo_url}` : DEFAULT_CHILD_PHOTO_ROOT;
+                const childImage = document.getElementById('child-image');
+                childImage.src = photoUrl;
+                childImage.alt = `${childFullName}'s Profile Picture`;
+                childImage.onerror = () => { childImage.src = DEFAULT_CHILD_PHOTO_ROOT; };
+
+                document.getElementById('child-age').textContent = child.age !== undefined ? `${child.age} Years` : 'N/A';
+
+
+
+                const adoptionStatusSpan = document.getElementById('child-adoption-status');
+                adoptionStatusSpan.textContent = 'Available for Adoption';
+                adoptionStatusSpan.className = 'adoption-status status-available';
+
+
+                document.querySelectorAll('.dynamic-child-name').forEach(el => el.textContent = child.first_name || 'this child');
+
+                document.getElementById('adoption-inquiry-link').href = `contact.html?inquiry=adoption&child=${encodeURIComponent(child.first_name || childId)}`;
+
+                loadingMsg.style.display = 'none';
+                detailCard.style.display = 'block';
+
+            } catch (error) {
+                console.error("Error fetching child details:", error);
+                loadingMsg.style.display = 'none';
+                errorMsg.textContent = `Error loading details: ${error.message}`;
+                errorMsg.style.display = 'block';
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+            fetchAndPopulateChildDetails();
+        });
+
+    </script>
+
+</body>
+</html>

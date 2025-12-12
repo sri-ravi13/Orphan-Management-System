@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Health Records - Orphanage Management System</title>
+    <style>
+
+        :root {
+            --primary-color: #3498db;
+            --primary-dark: #2980b9;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-gray: #f8f9fa;
+            --medium-gray: #ecf0f1;
+            --dark-gray: #7f8c8d;
+            --text-color: #34495e;
+            --card-bg: rgba(255, 255, 255, 0.97);
+            --border-color: #dfe6e9;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', Arial, sans-serif; background-color: var(--light-gray); color: var(--text-color); line-height: 1.6; position: relative; min-height: 100vh; padding-top: 80px; display: flex; flex-direction: column; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: url('../img/12062594_4872305.jpg') no-repeat center center fixed; background-size: cover; z-index: -1; background-color: rgba(244, 247, 246, 0.5); background-blend-mode: overlay; }
+        .page-header { width: 100%; background: linear-gradient(90deg, #34495e, #2c3e50); color: #ffffff; padding: 15px 40px; text-align: center; box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); position: fixed; top: 0; left: 0; z-index: 1001; display: flex; justify-content: space-between; align-items: center; }
+        .page-header h1 { margin: 0; font-weight: 600; font-size: 1.6em; flex-grow: 1; text-align: center; }
+        .back-link { color: #ffffff; text-decoration: none; font-size: 0.95em; font-weight: 500; padding: 8px 15px; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 5px; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .back-link:hover { background-color: rgba(255, 255, 255, 0.1); border-color: #fff; }
+        .back-link i { margin-right: 6px; }
+        .main-container { max-width: 1200px; width: 95%; margin: 30px auto; padding: 0 15px; flex-grow: 1; }
+        .card { margin-bottom: 30px; padding: 35px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; box-shadow: var(--shadow-md); }
+        .card h3 { margin-top: 0; margin-bottom: 30px; color: var(--text-color); font-weight: 600; font-size: 1.4em; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .form-container label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; font-size: 0.95em; }
+        .form-container input[type="text"], .form-container input[type="date"], .form-container textarea, .form-container select { width: 100%; padding: 12px 15px; margin-bottom: 20px; border: 1px solid #bdc3c7; border-radius: 5px; font-family: inherit; font-size: 1rem; background-color: #fff; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .form-container textarea { resize: vertical; min-height: 100px; }
+        .form-container input:focus, .form-container textarea:focus, .form-container select:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); }
+        .form-container input[type="submit"] { background-color: var(--primary-color); color: #fff; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 1.1rem; font-weight: 600; transition: background-color 0.3s ease, transform 0.2s ease; }
+        .form-container input[type="submit"]:hover { background-color: var(--primary-dark); transform: translateY(-2px); }
+        .form-container input[type="submit"]:disabled { background-color: #bdc3c7; cursor: not-allowed; transform: none; }
+        .record-list .table-responsive { overflow-x: auto; width: 100%; margin-top: 10px; }
+        .record-list table { width: 100%; min-width: 800px; border-collapse: collapse; }
+        .record-list th, .record-list td { border-bottom: 1px solid var(--border-color); padding: 14px 16px; text-align: left; vertical-align: middle; font-size: 0.95em; }
+        .record-list th { background-color: var(--medium-gray); color: var(--text-color); font-weight: 600; text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.5px; border-top: 1px solid var(--border-color); border-bottom-width: 2px; }
+        .record-list tbody tr:nth-child(even) { background-color: #fdfdfd; }
+        .record-list tbody tr:hover { background-color: #e9f5ff; }
+        .record-list td textarea { width: 100%; min-height: 40px; max-height: 100px; overflow-y: auto; border: none; background: transparent; resize: none; padding: 0; margin: 0; font-family: inherit; font-size: inherit; line-height: inherit; color: inherit; display: block; }
+        .record-list .actions-col { white-space: nowrap; width: 1%; }
+        .action-buttons { display: flex; gap: 8px; }
+        .edit-button, .delete-button { color: #fff; border: none; padding: 7px 14px; border-radius: 4px; cursor: pointer; font-size: 0.85em; font-weight: 500; transition: background-color 0.2s ease, transform 0.1s ease; display: inline-flex; align-items: center; gap: 5px; }
+        .edit-button { background-color: var(--warning-color); } .edit-button:hover { background-color: #d35400; transform: translateY(-1px); }
+        .delete-button { background-color: var(--danger-color); } .delete-button:hover { background-color: #c0392b; transform: translateY(-1px); }
+        .footer { width: 100%; background-color: #34495e; color: #ecf0f1; text-align: center; padding: 15px 0; margin-top: 40px; font-size: 0.9em; }
+        @media (max-width: 768px) {
+            .page-header { padding: 15px 20px; } .page-header h1 { font-size: 1.4em; } .back-link { font-size: 0.9em; padding: 6px 10px; }
+            .main-container { width: 100%; padding: 0 10px; } .card { padding: 20px; } .card h3 { font-size: 1.2em; margin-bottom: 20px; padding-bottom: 10px; }
+            .form-container input[type="text"], .form-container input[type="date"], .form-container textarea, .form-container select, .form-container input[type="submit"] { padding: 10px 12px; font-size: 0.95rem; }
+            .record-list .table-responsive { overflow-x: visible; } .record-list table, .record-list thead, .record-list tbody, .record-list th, .record-list td, .record-list tr { display: block; }
+            .record-list thead tr { position: absolute; top: -9999px; left: -9999px; }
+            .record-list tr { border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; background-color: #fff !important; padding: 10px;}
+            .record-list td { border: none; border-bottom: 1px dashed #eee; position: relative; padding-left: 45%; text-align: right; min-height: 30px; display: flex; align-items: center; justify-content: flex-end; padding-top: 8px; padding-bottom: 8px; }
+            .record-list td:before { content: attr(data-label); position: absolute; left: 10px; width: 40%; padding-right: 10px; white-space: nowrap; text-align: left; font-weight: bold; color: #555; font-size: 0.85em; }
+            .record-list td[data-label*="History"], .record-list td[data-label*="Vaccinations"], .record-list td[data-label*="Treatments"] { min-height: 50px; align-items: flex-start; }
+            .record-list td[data-label*="History"] textarea, .record-list td[data-label*="Vaccinations"] textarea, .record-list td[data-label*="Treatments"] textarea { text-align: right; padding: 0; }
+            .record-list td:last-child { border-bottom: 0; } .action-buttons { justify-content: flex-end; padding-top: 5px; width: 100%; }
+            .record-list td[data-label="Action"] { padding-left: 10px; } .record-list td[data-label="Action"]:before { content: ""; }
+        }
+    </style>
+</head>
+<body>
+     <header class="page-header">
+        <a href="#" id="back-dashboard-link" class="back-link"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        <h1>Health Records</h1>
+         <div style="width: 80px;"></div> 
+    </header>
+
+    <div class="main-container">
+        <div class="card form-container">
+            <h3 id="form-title">Add New Health Record</h3>
+            <form id="record-form" onsubmit="validateForm(event);">
+                <input type="hidden" id="record_id" name="record_id" value="">
+
+                <label for="child_id">Child:</label>
+                <select name="child_id" id="child_id" required>
+                    <option value="" disabled selected>Loading children...</option>
+                </select>
+
+                <label for="medical_history">Medical History:</label>
+                <textarea id="medical_history" name="medical_history" rows="4" required placeholder="Describe relevant medical history..."></textarea>
+
+                <label for="vaccinations">Vaccinations:</label>
+                <textarea id="vaccinations" name="vaccinations" rows="2" required placeholder="List vaccinations received..."></textarea>
+
+                <label for="treatments">Treatments:</label>
+                <textarea id="treatments" name="treatments" rows="2" required placeholder="Current or past treatments..."></textarea>
+
+                <label for="last_checkup">Last Checkup Date:</label>
+                <input type="date" id="last_checkup" name="last_checkup" required>
+
+                <label for="next_appointment">Next Appointment Date:</label>
+                <input type="date" id="next_appointment" name="next_appointment" required>
+
+                <input type="submit" id="submit-button" value="Add Health Record">
+            </form>
+        </div>
+
+        <div class="card record-list">
+            <h3>Existing Health Records</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Child</th>
+                            <th>Medical History</th>
+                            <th>Vaccinations</th>
+                            <th>Treatments</th>
+                            <th>Last Checkup</th>
+                            <th>Next Appointment</th>
+                            <th class="actions-col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="record-table-body">
+                         <tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--dark-gray);">Loading records... <i class="fas fa-spinner fa-spin"></i></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        © 2024 Orphanage Management System | All Rights Reserved
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        let currentUser = null;
+        let assignedChildIds = [];
+
+
+        function getUserInfo() {
+            const userData = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+            if (!userData || !userData.id || !userData.role) {
+                console.error("User not logged in or role missing.");
+                alert("Access denied. Please log in.");
+                window.location.href = 'login.html';
+                return null;
+            }
+            currentUser = userData;
+            return currentUser;
+        }
+
+
+        function setBackLink() {
+            const backLink = document.getElementById('back-dashboard-link');
+            if (!currentUser) return;
+
+            if (currentUser.role === 'Admin') {
+                backLink.href = 'admin_dashboard.html';
+            } else if (currentUser.role === 'Staff') {
+                backLink.href = 'staff_dashboard.html';
+            } else {
+
+                backLink.style.display = 'none';
+            }
+        }
+
+
+        async function fetchAssignedChildrenForStaff(staffId) {
+            if (!staffId) return [];
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/api/staff-assignments?staff_id=${staffId}`);
+                if (!response.ok) {
+                    console.error(`Error fetching assignments: ${response.statusText}`);
+                    return [];
+                }
+                const assignments = await response.json();
+
+                return assignments.map(a => a.child_id._id || a.child_id);
+            } catch (error) {
+                console.error('Failed to fetch assigned children:', error);
+                return [];
+            }
+        }
+
+
+        async function validateForm(event) {
+            event.preventDefault();
+            if (!currentUser) {
+                alert("Cannot submit record. User information missing.");
+                return false;
+            }
+
+            const childId = document.getElementById('child_id').value.trim();
+            const medicalHistory = document.getElementById('medical_history').value.trim();
+
+            const lastCheckup = document.getElementById('last_checkup').value;
+            const nextAppointment = document.getElementById('next_appointment').value;
+
+
+            if (currentUser.role === 'Staff' && !assignedChildIds.includes(childId)) {
+                 alert('You are not assigned to this child and cannot add health records for them.');
+                 return false;
+             }
+
+
+            if (childId === '') { alert('Please select a Child.'); return false; }
+             if (medicalHistory === '') { alert('Medical History is required.'); return false; }
+
+             if (new Date(lastCheckup) >= new Date(nextAppointment)) { alert('Next Appointment date must be after Last Checkup date.'); return false;}
+             if (new Date(lastCheckup) > new Date()) { alert('Last Checkup date cannot be in the future.'); return false; }
+
+
+            const recordId = document.getElementById('record_id').value;
+            const method = recordId ? 'PUT' : 'POST';
+            const url = recordId ? `${API_BASE_URL}/api/health-records/${recordId}` : `${API_BASE_URL}/api/health-records`;
+
+            const recordData = {
+                child_id: childId,
+                medical_history: medicalHistory,
+                vaccinations: document.getElementById('vaccinations').value.trim(),
+                treatments: document.getElementById('treatments').value.trim(),
+                last_checkup: new Date(lastCheckup).toISOString(),
+                next_appointment: new Date(nextAppointment).toISOString()
+            };
+
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = true;
+            submitButton.value = recordId ? 'Updating...' : 'Adding...';
+
+            try {
+
+                const response = await fetch(url, { method: method, headers: { 'Content-Type': 'application/json'}, body: JSON.stringify(recordData) });
+                 if (response.ok) {
+                     alert(`Health record ${recordId ? 'updated' : 'added'} successfully!`);
+                     fetchHealthRecords();
+                     resetForm();
+                 } else {
+                      let errorMsg = 'Unknown error occurred.';
+                     try { const errorData = await response.json(); errorMsg = errorData.message || errorData.error || JSON.stringify(errorData); }
+                     catch (e) { errorMsg = `HTTP error! Status: ${response.status} ${response.statusText}`; }
+                     console.error('Error submitting record:', errorMsg);
+                     alert(`Error submitting record: ${errorMsg}`);
+                 }
+
+            } catch (error) {
+                console.error('Error:', error); alert('Network error or server is down.');
+            } finally {
+                 submitButton.disabled = false;
+                 submitButton.value = recordId ? 'Update Health Record' : 'Add Health Record';
+            }
+        }
+
+
+        async function fetchHealthRecords() {
+            const tableBody = document.getElementById('record-table-body');
+            tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--dark-gray);">Loading records... <i class="fas fa-spinner fa-spin"></i></td></tr>`;
+
+            if (!currentUser) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health-records`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                let records = await response.json();
+                tableBody.innerHTML = '';
+
+
+                 if (currentUser.role === 'Staff') {
+                    records = records.filter(record => record.child_id && assignedChildIds.includes(record.child_id._id || record.child_id));
+                 }
+
+                 if (!records || records.length === 0) {
+                    const message = currentUser.role === 'Staff' ? 'No health records found for your assigned children.' : 'No health records found.';
+                    tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">${message}</td></tr>`;
+                    return;
+                 }
+
+                records.forEach(record => {
+                    const row = document.createElement('tr');
+                    let childName = 'N/A';
+                    const recordChildId = record.child_id ? (record.child_id._id || record.child_id) : null;
+
+                     if (record.child_id && typeof record.child_id === 'object') {
+                         childName = `${record.child_id.first_name || ''} ${record.child_id.last_name || ''}`.trim();
+                     } else if (record.child_id) { childName = `Child ID: ${record.child_id}`; }
+
+                     const escapeAttr = (str) => str ? String(str).replace(/'/g, "\\'").replace(/"/g, "") : '';
+                     const recordId = record._id || 'N/A';
+
+
+                     const canEditDelete = currentUser.role === 'Admin' || (currentUser.role === 'Staff' && recordChildId && assignedChildIds.includes(recordChildId));
+                     const actionsHtml = canEditDelete ? `
+                         <div class="action-buttons">
+                             <button class="edit-button" onclick="editRecord('${escapeAttr(recordId)}')" title="Edit Record"><i class="fas fa-pencil-alt"></i></button>
+                             <button class="delete-button" onclick="deleteRecord('${escapeAttr(recordId)}')" title="Delete Record"><i class="fas fa-trash-alt"></i></button>
+                         </div>` : '';
+
+                    row.innerHTML = `
+                        <td data-label="Child">${escapeAttr(childName)}</td>
+                        <td data-label="Medical History"><textarea readonly>${escapeAttr(record.medical_history)}</textarea></td>
+                        <td data-label="Vaccinations"><textarea readonly>${escapeAttr(record.vaccinations)}</textarea></td>
+                        <td data-label="Treatments"><textarea readonly>${escapeAttr(record.treatments)}</textarea></td>
+                        <td data-label="Last Checkup">${record.last_checkup ? new Date(record.last_checkup).toLocaleDateString() : 'N/A'}</td>
+                        <td data-label="Next Appointment">${record.next_appointment ? new Date(record.next_appointment).toLocaleDateString() : 'N/A'}</td>
+                        <td data-label="Action" class="actions-col">${actionsHtml}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching records:', error);
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: red;">Failed to load health records.</td></tr>`;
+            }
+        }
+
+
+        async function fetchChildrenForDropdown() {
+            const childSelect = document.getElementById('child_id');
+            childSelect.innerHTML = '<option value="" disabled selected>Loading children...</option>';
+
+            if (!currentUser) return;
+
+            let childrenList = [];
+            try {
+                if (currentUser.role === 'Admin') {
+
+                    const response = await fetch(`${API_BASE_URL}/api/children`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    childrenList = await response.json();
+                } else if (currentUser.role === 'Staff') {
+
+
+
+                    const response = await fetch(`${API_BASE_URL}/api/children`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const allChildren = await response.json();
+                    childrenList = allChildren.filter(child => assignedChildIds.includes(child._id));
+
+
+
+                }
+
+                childSelect.innerHTML = '<option value="" disabled selected>Select Child</option>';
+
+                if (childrenList.length > 0) {
+                    childrenList.forEach(child => {
+                        const option = document.createElement('option');
+                        option.value = child._id;
+                        option.textContent = `${child.first_name} ${child.last_name} (ID: ${child._id.slice(-6)})`;
+                        childSelect.appendChild(option);
+                    });
+                } else {
+                     const message = currentUser.role === 'Staff' ? 'No children assigned to you.' : 'No children found.';
+                     childSelect.innerHTML = `<option value="" disabled selected>${message}</option>`;
+                }
+
+            } catch (error) {
+                console.error('Error fetching children for dropdown:', error);
+                childSelect.innerHTML = '<option value="" disabled selected>Error loading children</option>';
+            }
+        }
+
+
+
+        async function deleteRecord(id) {
+
+
+             if (confirm('Are you sure you want to delete this health record? This action cannot be undone.')) {
+                 try {
+                     const response = await fetch(`${API_BASE_URL}/api/health-records/${id}`, { method: 'DELETE' });
+                     if (response.ok) {
+                         alert('Record deleted successfully!');
+                         fetchHealthRecords();
+                     } else {
+                          let errorMsg = 'Unknown error occurred while deleting.';
+                          try { const errorData = await response.json(); errorMsg = errorData.message || errorData.error || JSON.stringify(errorData); }
+                          catch (e) { errorMsg = `HTTP error! Status: ${response.status} ${response.statusText}`; }
+                         console.error('Error deleting record:', errorMsg);
+                         alert(`Error deleting record: ${errorMsg}`);
+                     }
+                 } catch (error) {
+                     console.error('Error deleting record:', error);
+                     alert('Network error or server is down.');
+                 }
+             }
+         }
+
+
+        async function editRecord(id) {
+
+             try {
+                 const response = await fetch(`${API_BASE_URL}/api/health-records/${id}`);
+                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                 const record = await response.json();
+
+
+                 const recordChildId = record.child_id ? (record.child_id._id || record.child_id) : null;
+                 if (currentUser.role === 'Staff' && !assignedChildIds.includes(recordChildId)) {
+                     alert("You no longer have permission to edit this record.");
+                     return;
+                 }
+
+                 document.getElementById('form-title').innerText = 'Edit Health Record';
+                 document.getElementById('record_id').value = record._id;
+                 document.getElementById('child_id').value = recordChildId;
+                 document.getElementById('medical_history').value = record.medical_history || '';
+                 document.getElementById('vaccinations').value = record.vaccinations || '';
+                 document.getElementById('treatments').value = record.treatments || '';
+                 document.getElementById('last_checkup').value = record.last_checkup ? new Date(record.last_checkup).toISOString().split('T')[0] : '';
+                 document.getElementById('next_appointment').value = record.next_appointment ? new Date(record.next_appointment).toISOString().split('T')[0] : '';
+                 document.getElementById('submit-button').value = 'Update Health Record';
+
+                 document.getElementById('form-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+             } catch (error) {
+                 console.error('Error fetching record for edit:', error);
+                 alert('Failed to fetch record for editing.');
+             }
+         }
+
+
+        function resetForm() {
+            document.getElementById('form-title').innerText = 'Add Health Record';
+            document.getElementById('record-form').reset();
+            document.getElementById('record_id').value = '';
+            document.getElementById('submit-button').value = 'Add Health Record';
+            document.getElementById('submit-button').disabled = false;
+        }
+
+
+        window.onload = async () => {
+            currentUser = getUserInfo();
+            if (!currentUser) return;
+
+            setBackLink();
+
+            if (currentUser.role === 'Staff') {
+                 assignedChildIds = await fetchAssignedChildrenForStaff(currentUser.id);
+                 console.log("Assigned Child IDs:", assignedChildIds);
+             }
+
+
+             await fetchChildrenForDropdown();
+
+             await fetchHealthRecords();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Staff Child Management - Orphanage Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('../img/2302_q893_004.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .management-section {
+            background-color: #fff;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .management-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .management-form {
+            margin-bottom: 20px;
+        }
+
+        .management-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .management-form select,
+        .management-form input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .management-form input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        .assignment-list {
+            margin-top: 20px;
+        }
+
+        .assignment-list table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+
+        .assignment-list th,
+        .assignment-list td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .assignment-list th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .assignment-list tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .assignment-list tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .edit-button,
+        .delete-button {
+            background-color: #ffc107;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .edit-button:hover {
+            background-color: #e0a800;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .edit-assignment-form {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+
+        <div class="management-section">
+            <h2>Staff Child Management</h2>
+            <h3>Assign Staff to Child</h3>
+            <form class="management-form" onsubmit="return validateAssignForm(event);">
+                <label for="child_id">Child:</label>
+                <select name="child_id" id="child_id">
+                    <option value="">Select Child</option>
+                </select>
+
+                <label for="staff_id">Staff:</label>
+                <select name="staff_id" id="staff_id">
+                    <option value="">Select Staff</option>
+                </select>
+
+                <input type="submit" name="assign_staff" value="Assign Staff">
+            </form>
+        </div>
+
+        <div class="management-section">
+            <h3>Current Assignments</h3>
+            <div class="assignment-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Assignment ID</th>
+                            <th>Child</th>
+                            <th>Staff</th>
+                            <th>Assigned At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assignment-table-body">
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="edit-assignment-form" class="edit-assignment-form">
+                <h3>Edit Assignment</h3>
+                <form class="management-form" onsubmit="return validateEditForm(event);">
+                    <input type="hidden" name="assignment_id" id="edit-assignment-id">
+                    <label for="edit-child-id">Child:</label>
+                    <select name="child_id" id="edit-child-id" required>
+                        <option value="">Select Child</option>
+                    </select>
+
+                    <label for="edit-staff-id">Staff:</label>
+                    <select name="staff_id" id="edit-staff-id" required>
+                        <option value="">Select Staff</option>
+                    </select>
+
+                    <input type="submit" name="edit_assignment" value="Update Assignment">
+                     <button type="button" onclick="hideEditForm()">Cancel</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const API_BASE_URL = 'http://localhost:8000';
+    let currentAssignmentId = null;
+
+        async function fetchStaff() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/staff-assignments/staff`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const staff = await response.json();
+                const staffSelect = document.getElementById('staff_id');
+                 const editStaffSelect = document.getElementById('edit-staff-id');
+
+                staff.forEach(staffMember => {
+                    const option = document.createElement('option');
+                    option.value = staffMember._id;
+                    option.textContent = staffMember.username;
+                    staffSelect.appendChild(option);
+
+                     const editOption = document.createElement('option');
+                    editOption.value = staffMember._id;
+                    editOption.textContent = staffMember.username;
+                    editStaffSelect.appendChild(editOption);
+                });
+            } catch (error) {
+                console.error('Error fetching staff:', error);
+                alert('Failed to fetch staff.');
+            }
+        }
+
+        async function fetchChildren() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/staff-assignments/children`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const children = await response.json();
+                const childSelect = document.getElementById('child_id');
+                 const editChildSelect = document.getElementById('edit-child-id');
+
+                children.forEach(child => {
+                    const option = document.createElement('option');
+                    option.value = child._id;
+                    option.textContent = `${child.first_name} ${child.last_name}`;
+                    childSelect.appendChild(option);
+
+                      const editOption = document.createElement('option');
+                    editOption.value = child._id;
+                    editOption.textContent = `${child.first_name} ${child.last_name}`;
+                    editChildSelect.appendChild(editOption);
+                });
+            } catch (error) {
+                console.error('Error fetching children:', error);
+                alert('Failed to fetch children.');
+            }
+        }
+
+        async function fetchAssignments() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/staff-assignments`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const assignments = await response.json();
+                const tableBody = document.getElementById('assignment-table-body');
+                tableBody.innerHTML = '';
+
+                assignments.forEach(assignment => {
+                    const row = document.createElement('tr');
+
+                    const childName = assignment.child_id ? `${assignment.child_id.first_name} ${assignment.child_id.last_name}` : 'Unknown Child';
+                    const staffUsername = assignment.staff_id ? assignment.staff_id.username : 'Unknown Staff';
+
+                    row.innerHTML = `
+                        <td>${assignment._id}</td>
+                        <td>${childName}</td>
+                        <td>${staffUsername}</td>
+                        <td>${new Date(assignment.assigned_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="edit-button" onclick="showEditForm('${assignment._id}')">Edit</button>
+                            <button class="delete-button" onclick="deleteAssignment('${assignment._id}')">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching assignments:', error);
+                alert('Failed to fetch assignments.');
+                 const tableBody = document.getElementById('assignment-table-body');
+                 tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red;">Failed to load assignments.</td></tr>`;
+            }
+        }
+        async function validateAssignForm(event) {
+             event.preventDefault();
+
+            var childId = document.getElementById('child_id').value.trim();
+            var staffId = document.getElementById('staff_id').value.trim();
+
+            if (childId === '') {
+                alert('Child is required.');
+                return false;
+            }
+
+            if (staffId === '') {
+                alert('Staff is required.');
+                return false;
+            }
+
+             const assignmentData = {
+                child_id: childId,
+                staff_id: staffId
+            };
+
+
+             try {
+                const response = await fetch(`${API_BASE_URL}/api/staff-assignments`, {
+                      method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(assignmentData)
+                });
+
+                if (response.ok) {
+                    alert('Assignment added successfully!');
+                    fetchAssignments();
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error submitting assignment:', errorData);
+                    alert(`Error: ${errorData.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error or server is down.');
+            }
+        }
+
+         async function validateEditForm(event) {
+            event.preventDefault();
+
+            var childId = document.getElementById('edit-child-id').value.trim();
+            var staffId = document.getElementById('edit-staff-id').value.trim();
+
+            if (childId === '') {
+                alert('Child is required.');
+                return false;
+            }
+
+            if (staffId === '') {
+                alert('Staff is required.');
+                return false;
+            }
+
+            const assignmentData = {
+                child_id: childId,
+                staff_id: staffId
+            };
+
+              try {
+                const response = await fetch(`${API_BASE_URL}/api/staff-assignments/${currentAssignmentId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(assignmentData)
+                });
+
+                if (response.ok) {
+                    alert('Assignment updated successfully!');
+                    fetchAssignments();
+                    hideEditForm();
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error submitting assignment:', errorData);
+                    alert(`Error: ${errorData.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error or server is down.');
+            }
+        }
+
+          async function deleteAssignment(assignmentId) {
+            if (confirm('Are you sure you want to delete this assignment?')) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/staff-assignments/${assignmentId}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        alert('Record deleted successfully!');
+                        fetchAssignments();
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Error deleting record:', errorData);
+                        alert(`Error deleting record: ${errorData.message || 'Unknown error'}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting record:', error);
+                    alert('Network error or server is down.');
+                }
+            }
+        }
+
+          async function showEditForm(assignmentId) {
+            currentAssignmentId = assignmentId;
+            document.getElementById('edit-assignment-form').style.display = 'block';
+
+              try {
+                const response = await fetch(`${API_BASE_URL}/api/staff-assignments/${assignmentId}`);
+                 if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const assignment = await response.json();
+
+
+             document.getElementById('edit-child-id').value = assignment.child_id;
+             document.getElementById('edit-staff-id').value = assignment.staff_id;
+            }
+             catch (error) {
+                console.error('Error fetching assignment for edit:', error);
+                alert('Failed to fetch assignment details for editing.');
+            }
+        }
+
+
+        function hideEditForm() {
+              currentAssignmentId = null;
+            document.getElementById('edit-assignment-form').style.display = 'none';
+        }
+
+        window.onload = () => {
+            fetchStaff();
+            fetchChildren();
+            fetchAssignments();
+        };
+    </script>
+</body>
+</html>
